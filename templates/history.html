@@ -1,0 +1,56 @@
+
+{% extends 'base.html' %}
+
+{% block head %}
+<script src="../static/history.js"></script>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container h-100" style="width: 1100px;">
+
+    <div class="row">
+
+        <div class="col">
+            <center><h5>Your <b>Browsing History</b></h5></center>
+            <div id="history">
+                {% for message_html in history %}
+                    {{ message_html | safe}}
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+
+    <!--Floating send button-->
+    <!--<footer class="fixed-bottom">-->
+        <!--&lt;!&ndash;<div class="center-container">&ndash;&gt;-->
+        <!--<div class="container centerer" style="width: 600px;">-->
+            <!--<form>-->
+                <!--<div class="row input-group d-flex p-2">-->
+                    <!--&lt;!&ndash;<div class="centerer row">&ndash;&gt;-->
+                        <!--<div class="col-md-9">-->
+                            <!--<input class="form-control" type="text" name="myMessage" id="myMessage" placeholder="Send a URL"/>-->
+                        <!--</div>-->
+
+                        <!--<div class="col-md-3">-->
+                            <!--<span class="input-group-btn">-->
+                                <!--<button type="button" class="btn btn-dark" id="sendButton">Send</button>-->
+                            <!--</span>-->
+                        <!--</div>-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--</div>-->
+            <!--</form>-->
+        <!--</div>-->
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--</footer>-->
+
+    <br id="padding">
+
+
+</div>
+<!--<iframe id="my-frame" allow-same-origin src="https://google.com"></iframe>-->
+
+{% endblock %}

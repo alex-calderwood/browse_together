@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <!--<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/index.css">
+    <script src="../static/socket.io.min.js"></script>
+    <script src="../static/index.js"></script>
+
+    <meta charset="UTF-8">
+    <title>Twitter</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="{{url_for('index')}}">Twitter 2</a>
+
+          <span class="navbar-text large navbar-light bg-dark">
+            User {{ username }}
+          </span>
+
+        <a class="btn active bg-light" href="{{url_for('login')}}">Log in</a>
+    </nav>
+
+    <!--Place for messages to go-->
+
+    <div class="message-container">
+        <div id="messages">
+            {% for message_html in preexisting_messages %}
+                {{ message_html | safe}}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!--<div id="messages"></div>-->
+
+    <!--<footer class="fixed-bottom">-->
+
+    <div class="center-container">
+        <div class="input-group">
+            <form>
+                <input class="form-control" type="text" name="myMessage" id="myMessage" placeholder="Enter your message"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-dark" id="sendButton">Send</button>
+                </span>
+            </form>
+        </div>
+    </div>
+    <!--</footer>-->
+
+
+    <div id="padding"></div>
+</body>
+</html>

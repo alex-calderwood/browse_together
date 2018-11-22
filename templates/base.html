@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/index.css">
+    <script src="../static/socket.io.min.js"></script>
+
+    {% block head %} {% endblock %}
+
+    <meta charset="UTF-8">
+    <title>Browser Bros</title>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="{{url_for('index')}}">
+            <img src="/static/images/bb3.png" width="50" height="50" alt="">
+            <!--Browsing Buddy-->
+        </a>
+
+
+        <span class="navbar-text">
+            <h5 id="title">{{ title }}</h5>
+        </span>
+        <div id="left">
+            <span class="navbar-text">
+            {% if current_user.is_authenticated %}
+            Signed in as: {{ current_user.username }}
+            {% else %}
+            <!--Nothing -->
+            {% endif %}
+            </span>
+            <a class="btn active bg-light" href="{{url_for('press_switch_login')}}">
+                {% if current_user.is_authenticated %}
+                Log Out
+                {% else %}
+                Log In
+                {% endif %}
+            </a>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <div class="center">{{ message }}</div>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <!--<div id="messages"></div>-->
+
+    <!--Content-->
+    {% block content %} {% endblock %}
+
+</body>
+</html>

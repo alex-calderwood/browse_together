@@ -1,0 +1,64 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<!--Place for messages to go-->
+
+
+<div class="container h-100" style="width: 1100px;">
+
+    <div class="row">
+
+        <div class="col">
+            <center><h5>Links <b>from {{ to.username }}</b></h5></center>
+            <div id="{{ to.id }}-messages">
+                {% for message_html in from_messages %}
+                    {{ message_html | safe}}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!--TODO FIX THE SWITCHED TO FROM BUG-->
+
+        <div class="col">
+            <center><h5><b>You sent</b> to {{ to.username }}</h5></center>
+            <div id="{{ sent_from.id }}-messages">
+                {% for message_html in to_messages %}
+                    {{ message_html | safe}}
+                {% endfor %}
+            </div>
+            <div id="what"></div>
+        </div>
+
+    </div>
+
+
+    <footer class="fixed-bottom">
+        <!--<div class="center-container">-->
+        <div class="container centerer" style="width: 600px;">
+            <form>
+                <div class="row input-group d-flex p-2">
+                    <!--<div class="centerer row">-->
+                        <div class="col-md-9">
+                            <input class="form-control" type="text" name="myMessage" id="myMessage" placeholder="Send a URL"/>
+                        </div>
+
+                        <div class="col-md-3">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-dark" id="sendButton">Send</button>
+                            </span>
+                        </div>
+                    <!--</div>-->
+                </div>
+            </form>
+        </div>
+    <!--</div>-->
+    </footer>
+
+    <br id="padding">
+
+
+</div>
+<!--<iframe id="my-frame" allow-same-origin src="https://google.com"></iframe>-->
+
+{% endblock %}

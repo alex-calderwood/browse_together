@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% from "_formhelpers.html" import render_field %}
+
+<div class="center-container">
+    <div class="row">
+
+    <div class="col">
+        <h3>Log In</h3>
+    <form method=post action="{{ url_for('login') }}">
+      <dl>
+        {{ render_field(form.username) }}
+        {{ render_field(form.password) }}
+      </dl>
+      <p><input type=submit value="Log In">
+    </form>
+    </div>
+
+      <div class="col">
+        <h3>Register</h3>
+        <form method=post>
+          <dl>
+            {{ render_field(form.username) }}
+            {{ render_field(form.password) }}
+            {{ render_field(form.confirm) }}
+            {{ render_field(form.accept_tos) }}
+          </dl>
+          <p><input type=submit value=Register>
+        </form>
+        </div>
+
+    </div>
+</div>
+
+
+
+{% endblock %}
