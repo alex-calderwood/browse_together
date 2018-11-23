@@ -40,8 +40,6 @@ def truncate(url):
     """
     parsed = urlparse(url)
 
-    print(parsed)
-
     good_scheme = parsed.scheme in ('http', 'https')
 
     scheme = 'http' if not good_scheme else parsed.scheme
