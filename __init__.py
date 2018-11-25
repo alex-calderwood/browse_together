@@ -2,20 +2,20 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_socketio import SocketIO, send
 from flask_login import LoginManager, login_user, \
     logout_user, current_user, login_required
-# from flask_wtf import FlaskForm
-from wtforms import Form, BooleanField, StringField, PasswordField, validators
+from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, validators
 from flask_cors import CORS, cross_origin
 from flask import jsonify
 from urllib.parse import unquote
 from . import urltils
-from .models import User, draft_new_link_message, load_history, load_messages, db
+from .models import User, Group, get_groups, create_group, \
+    draft_new_link_message, load_history, load_messages, db
 
 
 # Initialize app and such
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///browse_together.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.secret_key = 'super secret keyssss'
+app.secret_key = 'super secret keysssss'
 socketio = SocketIO(app)
 db.init_app(app)
 app.app_context().push()
@@ -59,20 +59,73 @@ def handle_send_message(message):
 
 @app.route('/')
 def index():
-    return render_template('index.html', title='Friends', users=db.session.query(User).all())
+    if not current_user.is_authenticated:
+        return render_template('not_signed_in.html', title='Browse Together')
 
-@app.route('/group/<group_id>')
-def group():
-    # TODO
-    pass
+    return render_template('index.html', title='Your Groups', groups=get_groups(current_user))
+
+
+@app.route('/new_group/', methods=['GET', 'POST'])
+def new_group():
+    if not current_user.is_authenticated:
+        return redirect('register')
+
+    # Instantiate a WTForms form
+    form = NewGroupForm(request.form)
+
+    # Set list of available users to add to the group
+    form.member1.choices = \
+        form.member2.choices = \
+        form.member3.choices = \
+        [('', '')] + models.get_friends(current_user)
+
+    if request.method == 'POST' and form.validate():
+
+        name = form.group_name.data
+        groups = db.session.query(Group).filter_by(name=name).all()
+        error = False
+
+        if len(groups) >= 1:
+            form.group_name.errors.append('A group with that name already exists.')
+            error = True
+
+        if form.member1.data == '':
+            form.member1.errors.append('Required')
+            error = True
+
+        if error:
+            return render_template('create_group.html', form=form, groups=get_groups(current_user))
+        else:
+            # Create a new Group with the specified name and members
+            members_to_add = [current_user.username, form.member1.data, form.member2.data, form.member3.data]
+            create_group(name, members_to_add)
+            return redirect(url_for('group', group_name=name))
+
+    else:  # method = GET so render the page
+        return render_template('create_group.html', form=form)
+
+
+@app.route('/group/<group_name>')
+def group(group_name=None):
+
+    groups = db.session.query(Group).filter_by(name=group_name).all()
+    if len(groups) < 1:
+        flash('Could not find group {}.'.format(group_name))
+        return redirect(url_for('index'))
+
+    group = groups[0]
+
+    return render_template('group.html', group=group, groups=get_groups(current_user))
+
 
 @app.route('/user/<username>')
+@login_required
 def user(username=None):
 
     users = db.session.query(User).filter_by(username=username).all()
     if len(users) < 1:
         flash('Could not find user {}.'.format(username))
-        return redirect(url_for('index'))
+        return render_template('index.html', title='Your Groups', groups=get_groups(current_user))
 
     # Get the first user (we presume there is only 1 user allowed for each username)
     other_user = users[0]
@@ -83,7 +136,7 @@ def user(username=None):
                                from_messages=load_messages(sender=other_user, receiver=current_user),
                                to_messages=load_messages(sender=current_user, receiver=other_user))
     else:
-        return render_template('index.html')
+        return render_template('index.html', title='Your Groups', groups=get_groups(current_user))
 
 
 @app.route('/history')
@@ -188,14 +241,22 @@ def register_url_change():
     response = {'yo': status}
     return jsonify(response)
 
+# Define Forms (from WTForms) #
+
+
+class NewGroupForm(Form):
+    group_name = StringField('Group Name', [validators.Length(min=3, max=30)])
+    member1 = SelectField('Member 1')
+    member2 = SelectField('Member 2 (optional)', [validators.optional()])
+    member3 = SelectField('Member 3 (optional)', [validators.optional()])
 
 class RegistrationForm(Form):
     username = StringField('Username', [validators.Length(min=4, max=25)])
-    password = PasswordField('New Password', [
+    password = PasswordField('Password', [
         validators.DataRequired(),
         validators.equal_to('confirm', message='Passwords must match')
     ])
-    confirm = PasswordField('RepeatPassword')
+    confirm = PasswordField('Repeat Password')
     accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
 
 
@@ -204,6 +265,8 @@ class LoginForm(Form):
     password = PasswordField('Password', [
         validators.DataRequired()
     ])
+
+# End WTForms #
 
 
 db.create_all()

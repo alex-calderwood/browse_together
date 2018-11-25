@@ -20,3 +20,82 @@ a.nav-link:hover {color:#F00F00; text-decoration:none;} !important
 .history-card {
     height: 100px
 }
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 100vh;
+    background: #373D42;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: rgb(55,60,65);
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 2px solid #47748b;
+}
+
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+#sidebar ul li a {
+    padding: 7px;
+    font-size: 1.1em;
+    display: block;
+}
+
+#sidebar ul li a:hover {
+    color: #000;
+    background: #fff;
+}
+
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc;
+}
+
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left; -250px;
+    }
+
+    #sidebar.active {
+        margin-left 0;
+    }
+}
+
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
+}
+
+
+.sidebar-a, .sidebar-a:hover, .sidebar-a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}

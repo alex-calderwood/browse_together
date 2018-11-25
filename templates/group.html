@@ -1,10 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+
+{% block head %}
+<script src="../static/user.js"></script>
+{% endblock %}
+
+{% block content %}
+<!--Place for messages to go-->
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+    <nav id="sidebar">
+        <!--TODO https://bootstrapious.com/p/bootstrap-sidebar-->
+        <div class="sidebar-header">
+            <h4>Browse Together</h4>
+        </div>
+
+        <ul class="list-unstyled components">
+            <!--<p class="sidebar-p">Your Groups</p>-->
+            <li class="active">
+                Groups
+            </li>
+            {% for cur_group in groups %}
+            <li>
+                <a class="sidebar-a" href="{{ url_for('group', group_name=cur_group.name) }}"> {{cur_group.name}} </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+    </nav>
+
+    <!--Page Content-->
+    <div id=content class="container h-100" style="width: 1100px;">
+
+        <button type="button" id="sidebarCollapse" class="btn btn-info">
+            <i class="fas fa-align-left"></i>
+            <span>Toggle SideBar</span>
+        </button>
+
+        <div class="row">
+
+            <div class="col">
+                <div>
+                    <center><h3><b>{{ group.name }}</b></h3></center>
+                    <center><font color="grey">{% for member in group.members %}{{member.username}}, {% endfor %}</font></center>
+                </div>
+
+                <div id="{{ group.name }}-links">
+                    {% for message_html in group.messages %}
+                        {{ message_html | safe}}
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!--<iframe id="my-frame" allow-same-origin src="https://google.com"></iframe>-->
+
+{% endblock %}

@@ -10,3 +10,16 @@
   {% endif %}
   </dd>
 {% endmacro %}
+
+<!--Helper function for rendering a WTForms field in Bootstrap-->
+{% macro render_bootstrap_field(field) %}
+  <label class="col-4 col-form-label">{{field.label}}</label>
+  {{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <font color="red">{{ error }}</font>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

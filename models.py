@@ -37,12 +37,37 @@ def load_history(user):
     return [message.get_html(light=True) for message in history]
 
 
+def create_group(name, member_names):
+    new_group = Group(name=name)
+
+    for member_name in member_names:
+        if member_name != '':
+            member = User.query.filter_by(username=member_name).first()
+            new_group.members.append(member)
+
+    db.session.add(new_group)
+    db.session.commit()
+
+
+def get_friends(user):
+    other_users = User.query.filter(User.id != user.id).all()
+
+    friends = [(user.username, user.username) for user in other_users]
+
+    return friends
+
+
+def get_groups(user):
+    groups_user_member_of = Group.query.filter(Group.members.any(username=user.username))
+    return groups_user_member_of
+
+
 # Group <-> Link table
 group_links = db.Table('group_links',
     db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
     db.Column('link_id', db.Integer, db.ForeignKey('link.id'))
 )
-
+localhost:5000
 # Group <-> User table
 members = db.Table('members',
     db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
@@ -108,6 +133,7 @@ class Group(db.Model):
     __tablename__ = 'group'
 
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(256), nullable=False)
 
     members = db.relationship('User', secondary='members',
                             backref=db.backref('members_of', lazy='dynamic'))

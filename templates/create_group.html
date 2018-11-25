@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+{% from "_formhelpers.html" import render_bootstrap_field %}
+
+<div class="container h-100" style="width: 1100px;">
+    <center><h3>Create a <b>New Group</b></h3></center>
+    <form method="post">
+        <!--<div class="form-group row">-->
+            <!--<label for="group-name-input" class="col-4 col-form-label">Give your group <b>a name</b></label>-->
+          <!--<div class="col-8">-->
+            <!--<input class="form-control" type="text" placeholder="Group Name" id='group-name-input' name="group-name">-->
+          <!--</div>-->
+        <!--</div>-->
+        <div class="form-group row">
+             {{ render_bootstrap_field(form.group_name, class='col-8 form-control') }}
+        </div>
+
+        <div class="form-group row">
+             {{ render_bootstrap_field(form.member1, class='col-8 form-control') }}
+        </div>
+        <div class="form-group row">
+             {{ render_bootstrap_field(form.member2, class='col-8 form-control') }}
+        </div>
+        <div class="form-group row">
+             {{ render_bootstrap_field(form.member3, class='col-8 form-control') }}
+        </div>
+
+
+        <div class="form-group row">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

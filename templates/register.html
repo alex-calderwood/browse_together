@@ -11,10 +11,10 @@
         <h3>Log In</h3>
     <form method=post action="{{ url_for('login') }}">
       <dl>
-        {{ render_field(form.username) }}
-        {{ render_field(form.password) }}
+        {{ render_field(form.username, class='form-control') }}
+        {{ render_field(form.password, class='form-control') }}
       </dl>
-      <p><input type=submit value="Log In">
+      <p><input class='btn btn-dark' type=submit value="Log In">
     </form>
     </div>
 
@@ -22,12 +22,12 @@
         <h3>Register</h3>
         <form method=post>
           <dl>
-            {{ render_field(form.username) }}
-            {{ render_field(form.password) }}
-            {{ render_field(form.confirm) }}
-            {{ render_field(form.accept_tos) }}
+            {{ render_field(form.username, class='form-control') }}
+            {{ render_field(form.password, class='form-control') }}
+            {{ render_field(form.confirm, class='form-control') }}
+            {{ render_field(form.accept_tos, class='radio') }}
           </dl>
-          <p><input type=submit value=Register>
+          <p><input class='btn btn-dark' type=submit value=Register>
         </form>
         </div>
 
