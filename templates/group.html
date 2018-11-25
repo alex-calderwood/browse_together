@@ -2,7 +2,15 @@
 
 
 {% block head %}
-<script src="../static/user.js"></script>
+<script src="../static/group.js"></script>
+{% endblock %}
+
+
+{% block bar %}
+<button type="button" id="sidebarCollapse" class="btn btn-light">
+    <i class="fas fa-align-left"></i>
+    <span>Toggle SideBar</span>
+</button>
 {% endblock %}
 
 {% block content %}
@@ -12,16 +20,12 @@
 
     <!-- Sidebar -->
     <nav id="sidebar">
-        <!--TODO https://bootstrapious.com/p/bootstrap-sidebar-->
+        <!--TODO make a nicer looking hamberger button https://bootstrapious.com/p/bootstrap-sidebar-->
         <div class="sidebar-header">
             <h4>Browse Together</h4>
         </div>
 
         <ul class="list-unstyled components">
-            <!--<p class="sidebar-p">Your Groups</p>-->
-            <li class="active">
-                Groups
-            </li>
             {% for cur_group in groups %}
             <li>
                 <a class="sidebar-a" href="{{ url_for('group', group_name=cur_group.name) }}"> {{cur_group.name}} </a>
@@ -33,11 +37,6 @@
 
     <!--Page Content-->
     <div id=content class="container h-100" style="width: 1100px;">
-
-        <button type="button" id="sidebarCollapse" class="btn btn-info">
-            <i class="fas fa-align-left"></i>
-            <span>Toggle SideBar</span>
-        </button>
 
         <div class="row">
 
