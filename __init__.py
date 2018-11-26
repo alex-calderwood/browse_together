@@ -6,9 +6,7 @@ from wtforms import Form, BooleanField, StringField, PasswordField, SelectField,
 from flask_cors import CORS, cross_origin
 from flask import jsonify
 from urllib.parse import unquote
-from . import urltils
-from .models import User, Group, get_groups, create_group, \
-    draft_new_link_message, load_history, load_messages, db
+from flask_sqlalchemy import SQLAlchemy
 
 
 # Initialize app and such
@@ -17,7 +15,20 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///browse_together.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = 'super secret keysssss'
 socketio = SocketIO(app)
-db.init_app(app)
+db = SQLAlchemy(app)
+
+
+# Provide a way for models.py (and any other files that needs it) to get access to the database
+def get_db():
+    return db
+
+
+# Now you can import models.py because it can use this database
+from . import urltils, models
+from .models import User, Group, get_groups, create_group, \
+    store_url_browse_event, load_history, load_messages
+
+
 app.app_context().push()
 
 # Create the login helper object
@@ -51,7 +62,7 @@ def handle_send_message(message):
         flash('Not a valid URL. Message not sent.')
 
     # Create a new link and store it in the databse
-    message = draft_new_link_message(message, current_user)
+    message = store_url_browse_event(message, current_user)
 
     # Send the new message's html representation across the network
     send(message, broadcast=True)
@@ -108,14 +119,33 @@ def new_group():
 @app.route('/group/<group_name>')
 def group(group_name=None):
 
-    groups = db.session.query(Group).filter_by(name=group_name).all()
-    if len(groups) < 1:
-        flash('Could not find group {}.'.format(group_name))
+    group = models.get_group(group_name)
+    if group is None:
         return redirect(url_for('index'))
 
-    group = groups[0]
+    is_sending = models.user_is_sharing_with_group(current_user, group)
 
-    return render_template('group.html', group=group, groups=get_groups(current_user))
+    return render_template('group.html', group=group, groups=get_groups(current_user), sending=is_sending)
+
+
+@app.route('/toggle_send_browsing/<group_name>', methods=["POST"])
+@login_required
+def toggle_send_browsing(group_name=None):
+
+    # Whether the user turned on or off sending their browsing history to this group
+    send = request.values['should_send'] == 'true'
+
+    group = models.get_group(group_name)
+    if group is None:
+        return redirect(url_for('index'))
+
+    # Record the change on the backend
+    models.set_send(current_user, group, send)
+
+    # Determine if the user is sending their browsing data to this group (for rendering the checkbox)
+    is_sending = models.user_is_sharing_with_group(current_user, group)
+
+    return render_template('group.html', group=group, groups=get_groups(current_user), sending=is_sending)
 
 
 @app.route('/user/<username>')
@@ -223,7 +253,7 @@ def register_url_change():
         url = url.replace(url_token, '')
 
         # Create a message, persist it to the database
-        message = draft_new_link_message(url, me)
+        message = store_url_browse_event(url, me)
 
 
         # TODO : GET THIS WORKING (WITH emit)

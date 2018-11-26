@@ -16,24 +16,24 @@
 {% block content %}
 <!--Place for messages to go-->
 
-<div class="wrapper">
+<!--<div class="wrapper">-->
 
-    <!-- Sidebar -->
-    <nav id="sidebar">
-        <!--TODO make a nicer looking hamberger button https://bootstrapious.com/p/bootstrap-sidebar-->
-        <div class="sidebar-header">
-            <h4>Browse Together</h4>
-        </div>
+    <!--&lt;!&ndash; Sidebar &ndash;&gt;-->
+    <!--<nav id="sidebar">-->
+        <!--&lt;!&ndash;TODO make a nicer looking hamberger button https://bootstrapious.com/p/bootstrap-sidebar&ndash;&gt;-->
+        <!--<div class="sidebar-header">-->
+            <!--<h4>Browse Together</h4>-->
+        <!--</div>-->
 
-        <ul class="list-unstyled components">
-            {% for cur_group in groups %}
-            <li>
-                <a class="sidebar-a" href="{{ url_for('group', group_name=cur_group.name) }}"> {{cur_group.name}} </a>
-            </li>
-            {% endfor %}
-        </ul>
+        <!--<ul class="list-unstyled components">-->
+            <!--{% for cur_group in groups %}-->
+            <!--<li>-->
+                <!--<a class="sidebar-a" href="{{ url_for('group', group_name=cur_group.name) }}"> {{cur_group.name}} </a>-->
+            <!--</li>-->
+            <!--{% endfor %}-->
+        <!--</ul>-->
 
-    </nav>
+    <!--</nav>-->
 
     <!--Page Content-->
     <div id=content class="container h-100" style="width: 1100px;">
@@ -42,8 +42,36 @@
 
             <div class="col">
                 <div>
-                    <center><h3><b>{{ group.name }}</b></h3></center>
-                    <center><font color="grey">{% for member in group.members %}{{member.username}}, {% endfor %}</font></center>
+                    <center class="page-title">{{ group.name }}</center>
+                    <center class="page-sub">Members: {% for member in group.members %}{{member.username}}, {% endfor %}</center>
+                </div>
+
+                <br>
+
+                <!--<button class="collapsible">Options</button>-->
+                <center>
+                    <button class="btn btn-primary btn-sm center" type="button" data-toggle="collapse" data-target="#options-card" aria-expanded="false" aria-controls="options-card">
+                        Options
+                    </button>
+                </center>
+
+                <div class="collapse" id="options-card">
+                      <div class="card card-body">
+                        Anim pariatur cliche reprehenderit, enim ei
+                      </div>
+                </div>
+
+                <div class="card options-card mb-3">
+                    <form method=post">
+                        <div class="form-check form-check-inline">
+                            {% if sending %}
+                                <input class="my-checkbox" type="checkbox" id="send-history" checked value="option1" >
+                            {% else %}
+                                <input class="my-checkbox" type="checkbox" id="send-history" value="option1">
+                            {% endif %}
+                            <label class="form-check-label" for="send-history">Send Browsing to this Group. <font color="grey">Note you can only send browsing data to one group.</font></label>
+                        </div>
+                    </form>
                 </div>
 
                 <div id="{{ group.name }}-links">
@@ -57,7 +85,10 @@
 
     </div>
 
-</div>
+
+
+
+<!--</div>-->
 <!--<iframe id="my-frame" allow-same-origin src="https://google.com"></iframe>-->
 
 {% endblock %}

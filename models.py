@@ -1,19 +1,40 @@
 from flask_login import UserMixin
 from . import urltils
-from flask_sqlalchemy import SQLAlchemy
+from . import get_db
 
-db = SQLAlchemy()
+# Get an instance of the db from __init__
+db = get_db()
+
+def get_group(group_name):
+    groups = db.session.query(Group).filter_by(name=group_name).all()
+    if len(groups) < 1:
+        print('Could not find group {}.'.format(group_name))
+        return None
+
+    group = groups[0]
+    return group
 
 
-def draft_new_link_message(url, originator):
+def store_url_browse_event(url, user):
     """
     Create a message, commit it to the database and get it ready to send across the network.
     """
 
     # Create the message and add it to the database
-    link = Link(url=url, originator=originator, originator_id=originator.id)
-    db.session.object_session(link).add(link)  # TODO fix this hacky solution
-    db.session.object_session(link).commit()
+    link = Link(url=url, originator=user, originator_id=user.id)
+
+    # Get the correct session for the object (hacky solution) #TODO fix base problem
+    session = db.session.object_session(link)
+
+    # Persist the change
+    session.add(link)
+    session.commit()
+
+    # If the user is currently sharing with a group, let them see the event
+    group = session.query(Group).filter_by(id=user.sharing_browsing_with).first()
+    if group is not None:
+        group.messages.append(link)
+        session.commit()
 
     return link.serialize()
 
@@ -60,6 +81,34 @@ def get_friends(user):
 def get_groups(user):
     groups_user_member_of = Group.query.filter(Group.members.any(username=user.username))
     return groups_user_member_of
+
+
+def set_send(user, group, send):
+    """
+    If send is True, set this group as the group the user is sharing data with.
+    If send is False and this is the group the user is currently sharing with, disable sending entirely.
+
+    """
+
+    print(user, group, send)
+
+    if send is False and user.sharing_browsing_with == group.id:
+        user.sharing_browsing_with = None
+    else:
+        user.sharing_browsing_with = group.id
+
+    print(user.sharing_browsing_with)
+    db.session.commit()
+
+
+def user_sharing_with_someone_else(user, group):
+    sharing_with = user.sharing_browsing_with
+    return sharing_with is not None and sharing_with != group.id
+
+
+def user_is_sharing_with_group(user, group):
+    """ Return true if the user is sharing their browsing history with the given group"""
+    return user.sharing_browsing_with == group.id
 
 
 # Group <-> Link table
@@ -127,6 +176,9 @@ class User(db.Model, UserMixin):
 
     # A user's browing history that we have stored
     history = db.relationship('Link', back_populates='originator')
+
+    # The group the user is sending their browsing data to (or None)
+    sharing_browsing_with = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=True)
 
 
 class Group(db.Model):

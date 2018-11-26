@@ -3,11 +3,12 @@
 
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../static/index.css">
     <script src="../static/socket.io.min.js"></script>
-<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
     {% block head %} {% endblock %}
 
@@ -17,7 +18,9 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-dark bg-dark">
+
+
+    <nav class="navbar navbar-default">
         <a class="navbar-brand" href="{{url_for('index')}}">
             <img src="/static/images/bb3.png" width="50" height="50" alt="">
             <!--Browsing Buddy-->
@@ -46,20 +49,41 @@
         </div>
     </nav>
 
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul class=flashes>
-        {% for message in messages %}
-          <div class="center">{{ message }}</div>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+    <div class="wrapper">
 
-    <!--<div id="messages"></div>-->
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <!--TODO make a nicer looking hamberger button https://bootstrapious.com/p/bootstrap-sidebar-->
+            <div class="sidebar-header">
+                <h4>Browse Together</h4>
+            </div>
 
-    <!--Content-->
-    {% block content %} {% endblock %}
+            <ul class="list-unstyled components">
+                {% for cur_group in groups %}
+                <li>
+                    <a class="sidebar-a" href="{{ url_for('group', group_name=cur_group.name) }}"> {{cur_group.name}} </a>
+                </li>
+                {% endfor %}
+            </ul>
+
+        </nav>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <div class="center">{{ message }}</div>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+
+
+        <!--Content-->
+        {% block content %} {% endblock %}
+
+    </div>
+
 
 </body>
 </html>

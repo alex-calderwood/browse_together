@@ -25,6 +25,10 @@ a.nav-link:hover {color:#F00F00; text-decoration:none;} !important
     color: white;
 }
 
+.navbar-default {
+    background-color: var(--main-color);
+} !important
+
 .iframe-card {
     height: 400px
 }
@@ -32,6 +36,24 @@ a.nav-link:hover {color:#F00F00; text-decoration:none;} !important
 .history-card {
     height: 100px
 }
+
+.page-title {
+    color: var(--main-color-dark);
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2em;
+    font-weight: 600;
+    line-height: 1em;
+}
+
+.page-sub {
+    color: grey;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1em;
+}
+
 
 .wrapper {
     display: flex;
@@ -59,7 +81,7 @@ a.nav-link:hover {color:#F00F00; text-decoration:none;} !important
 }
 
 #sidebar ul.components {
-    padding: 20px 0;
+    padding: 20px;
 }
 
 #sidebar ul p {
@@ -110,4 +132,58 @@ ul ul a {
     color: inherit;
     text-decoration: none;
     transition: all 0.3s;
+}
+
+.active, .collapsible:hover {
+    background-color: var(--main-color-dark);
+}
+
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: var(--main-color);
+}
+
+.options-card {
+
+}
+
+.my-checkbox {
+    width: 25px;
+    background-color: var(--main-color-dark);
+    position: relative;
+}
+
+/**
+ * Display the tick inside the checkbox
+ */
+.my-checkbox label:after {
+    opacity: 0.2;
+    content: '';
+    position: absolute;
+    width: 9px;
+    height: 5px;
+    background: transparent;
+    top: 6px;
+    left: 7px;
+    border: 3px solid #333;
+    border-top: none;
+    border-right: none;
+
+    transform: rotate(-45deg);
+}
+
+/**
+ * Create the hover event of the tick
+ */
+.my-checkbox label:hover::after {
+    opacity: 0.5;
+}
+
+/**
+ * Create the checkbox state for the tick
+ */
+.my-checkbox input[type=checkbox]:checked + label:after {
+    opacity: 1;
 }

@@ -32,6 +32,42 @@ $(document).ready(function() {
         $('#sidebar').toggleClass('active');
     })
 
+    // Start sending history to a group
+    $('#send-history').on('click', function() {
+
+        console.log('something')
+
+        var checked = false
+
+        if ($('#send-history').is(":checked")) {
+            checked = true
+        }
+
+        // Get the group name
+        var group_url = window.location.pathname
+        group_url = group_url.replace(/%20/g," ");
+        var group = group_url.split('/')
+        console.log('group', group)
+        group = group[2]
+
+        url = '../toggle_send_browsing/' + group
+
+        console.log(url, checked)
+
+        const request_data = {
+          group_name: group,
+          should_send: checked
+        }
+
+        $.post(url, request_data, function( data ) {
+//            console.log('posted', request_data)
+//c            console.log(data)
+        });
+
+
+    });
+
+
 //    console.log('alex', document.getElementById("my-frame").contentWindow.location.href)
 });
 
