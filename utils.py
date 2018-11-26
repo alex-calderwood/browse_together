@@ -2,6 +2,15 @@ import requests
 from urllib.parse import urlparse, ParseResult
 
 
+def url_in_stoplist(url):
+    parsed = urlparse(url)
+    print('url', parsed)
+    if 'localhost:' in parsed.netloc:
+        return True
+    if 'chrome' in parsed.scheme:
+        return True  # Probably some other Chrome Event like newtab
+    return False
+
 def validate_url(url):
     response = requests.get(url)
     return response.status_code == 200

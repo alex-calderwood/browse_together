@@ -24,7 +24,7 @@ def get_db():
 
 
 # Now you can import models.py because it can use this database
-from . import urltils, models
+from . import utils, models
 from .models import User, Group, get_groups, create_group, \
     store_url_browse_event, load_history, load_messages
 
@@ -53,7 +53,7 @@ def handle_send_message(message):
     to_user = db.session.query(User).filter_by(username=to_username).all()[0]
 
     # Construct a cleaned URL
-    message = urltils.clean(message)
+    message = utils.clean(message)
 
     print('message', message)
 
@@ -71,9 +71,9 @@ def handle_send_message(message):
 @app.route('/')
 def index():
     if not current_user.is_authenticated:
-        return render_template('not_signed_in.html', title='Browse Together')
+        return render_template('not_signed_in.html')
 
-    return render_template('index.html', title='Your Groups', groups=get_groups(current_user))
+    return render_template('index.html', groups=get_groups(current_user))
 
 
 @app.route('/new_group/', methods=['GET', 'POST'])
@@ -173,7 +173,7 @@ def user(username=None):
 @login_required
 def history():
     history_urls = load_history(current_user)
-    return render_template('history.html', history=history_urls)
+    return render_template('history.html', history=history_urls, groups=get_groups(current_user))
 
 
 # noinspection PyArgumentList
@@ -244,28 +244,27 @@ def register_url_change():
     print('--------')
 
     if len(urls) == 1:  # A new URL was navigated to
-        status = 'yo'
+        status = 'success'
 
         # Get the url string without quote escapes
         url = [term for term in urls][0]
         url = str(unquote(url))
-        # print('UUU', url)
         url = url.replace(url_token, '')
 
-        # Create a message, persist it to the database
-        message = store_url_browse_event(url, me)
+        if not utils.url_in_stoplist(url):
+            # Create a message, persist it to the database
+            message = store_url_browse_event(url, me)
 
-
-        # TODO : GET THIS WORKING (WITH emit)
-        # Send the new message's html representation across the network
-        # try:
-        # send(message, broadcast=True)
-            # print('Success', url)
-        # except Exception:
-        #     print('Failed', url)
-        #     pass
+            # TODO : GET THIS WORKING (WITH emit)
+            # Send the new message's html representation across the network
+            # try:
+            # send(message, broadcast=True)
+                # print('Success', url)
+            # except Exception:
+            #     print('Failed', url)
+            #     pass
     else:
-        status = 'naw'
+        status = 'failure'
 
     print('------')
     response = {'yo': status}
@@ -275,7 +274,7 @@ def register_url_change():
 
 
 class NewGroupForm(Form):
-    group_name = StringField('Group Name', [validators.Length(min=3, max=30)])
+    group_name = StringField('Group Name', [validators.Length(min=3, max=50)])
     member1 = SelectField('Member 1')
     member2 = SelectField('Member 2 (optional)', [validators.optional()])
     member3 = SelectField('Member 3 (optional)', [validators.optional()])

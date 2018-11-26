@@ -1,6 +1,7 @@
 from flask_login import UserMixin
-from . import urltils
+from . import utils
 from . import get_db
+from datetime import datetime, timedelta
 
 # Get an instance of the db from __init__
 db = get_db()
@@ -15,13 +16,51 @@ def get_group(group_name):
     return group
 
 
+# Time Utilities #
+def now_string():
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def string_to_datetime(string):
+    datetime_object = datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
+    return datetime_object
+
+
+def relative_date(earlier_datetime):
+    delta = datetime.now() - earlier_datetime
+
+    two_years = timedelta(days=365)
+    year = timedelta(days=365)
+    month = timedelta(weeks=4)
+    day = timedelta(days=1)
+    hour = timedelta(hours=1)
+    min = timedelta(minutes=1)
+
+    if delta < min:
+        return 'just now'
+    elif delta < hour:
+        return str(int(delta.seconds / 60)) + ' minutes ago'
+    elif delta < day:
+        return str(int(delta.seconds / (60 * 60))) + ' hours ago'
+    elif delta < month:
+        return str(delta.days) + ' days ago'
+    elif delta < year:
+        return str(int(delta.days / 30.44)) + ' months ago'
+    elif delta < two_years:
+        return '> 1 year ago'
+    else:
+        return '> 2 years ago'
+
+# End Time Utilities #
+
+
 def store_url_browse_event(url, user):
     """
     Create a message, commit it to the database and get it ready to send across the network.
     """
 
     # Create the message and add it to the database
-    link = Link(url=url, originator=user, originator_id=user.id)
+    link = Link(url=url, originator=user, originator_id=user.id, posted_at=now_string())
 
     # Get the correct session for the object (hacky solution) #TODO fix base problem
     session = db.session.object_session(link)
@@ -36,6 +75,7 @@ def store_url_browse_event(url, user):
         group.messages.append(link)
         session.commit()
 
+    # Return serialized message ready for Socket.io
     return link.serialize()
 
 
@@ -136,13 +176,14 @@ class Link(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     url = db.Column(db.String(500), nullable=False)
+    posted_at = db.Column(db.String(200), nullable=False)  # String representation of datetime
 
     originator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     originator = db.relationship("User", back_populates='history')
 
     # Load card templates
-    message_template = open('templates/iframe_card.html').read()
-    history_template = open('templates/history_card.html').read()
+    message_template = open('templates/card/advanced_card.html').read()
+    history_template = open('templates/card/history_card.html').read()
 
     def __repr__(self):
         return '{} {} {}'.format(self.id, self.url, self.originator)
@@ -150,16 +191,15 @@ class Link(db.Model):
     def get_html(self, light=False):
         """Return the HTML representation of the message with  bootstrap formatting"""
 
-        # Get the name of the user that posted it
-        # posted_by = db.session.query(User).get(self.sender_id)
-
-        text = urltils.truncate(self.url)
+        user = self.originator.username
+        url = utils.truncate(self.url)
         href = self.url
+        time_posted = relative_date(string_to_datetime(self.posted_at))
 
         if light:
-            html = Link.history_template.format(text=text, href=href)
+            html = Link.history_template.format(url=url, href=href)
         else:
-            html = Link.message_template.format(text=text, href=href)
+            html = Link.message_template.format(user=user, url=url, href=href, date=time_posted)
 
         return html
 

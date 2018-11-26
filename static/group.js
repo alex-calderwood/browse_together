@@ -27,9 +27,11 @@ $(document).ready(function() {
         console.log('Sent message', myMessage)
     })
 
+
     // Collapse sidebar
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
+        $(this).toggleClass('active');
     })
 
     // Start sending history to a group
@@ -49,12 +51,14 @@ $(document).ready(function() {
         var group = group_url.split('/')
         console.log('group', group)
         group = group[2]
-
         url = '../toggle_send_browsing/' + group
 
         console.log(url, checked)
 
+        user = 'Alex'
+
         const request_data = {
+          user: user, // Unused
           group_name: group,
           should_send: checked
         }
@@ -63,7 +67,6 @@ $(document).ready(function() {
 //            console.log('posted', request_data)
 //c            console.log(data)
         });
-
 
     });
 

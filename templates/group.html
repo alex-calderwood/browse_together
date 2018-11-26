@@ -7,10 +7,6 @@
 
 
 {% block bar %}
-<button type="button" id="sidebarCollapse" class="btn btn-light">
-    <i class="fas fa-align-left"></i>
-    <span>Toggle SideBar</span>
-</button>
 {% endblock %}
 
 {% block content %}
@@ -36,59 +32,72 @@
     <!--</nav>-->
 
     <!--Page Content-->
-    <div id=content class="container h-100" style="width: 1100px;">
+    <div id=content" class="center">
 
-        <div class="row">
 
-            <div class="col">
-                <div>
-                    <center class="page-title">{{ group.name }}</center>
-                    <center class="page-sub">Members: {% for member in group.members %}{{member.username}}, {% endfor %}</center>
+
+        <button type="button" id="sidebarCollapse" class="navbar-btn">
+            <!--<i class="fas fa-align-left"></i>-->
+            <!--Hamburger-->
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="container h-100" style="width: 1100px;">
+
+            <div class="row">
+
+                <div class="col">
+                    <div>
+                        <center class="page-title">{{ group.name }}</center>
+                        <center class="page-sub">Members: {% for member in group.members %}{{member.username}}, {% endfor %}</center>
+                    </div>
+
+                    <br>
+
+                    <!--<button class="collapsible">Options</button>-->
+                    <center>
+                        <button class="btn btn-primary btn-sm center" type="button" data-toggle="collapse" data-target="#options-card" aria-expanded="false" aria-controls="options-card">
+                            Options
+                        </button>
+                    </center>
+
+                    <div class="collapse" id="options-card">
+                          <div class="card card-body">
+                            Anim pariatur cliche reprehenderit, enim ei
+                          </div>
+                    </div>
+
+                    <div class="card options-card mb-3">
+                        <form method=post">
+                            <div class="form-check form-check-inline">
+                                {% if sending %}
+                                    <input class="my-checkbox" type="checkbox" id="send-history" checked value="option1" >
+                                {% else %}
+                                    <input class="my-checkbox" type="checkbox" id="send-history" value="option1">
+                                {% endif %}
+                                <label class="form-check-label" for="send-history">Send Browsing to this Group. <font color="grey">Note you can only send browsing data to one group.</font></label>
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <div id="{{ group.name }}-links">
+
+                        {% for message in group.messages %}
+                            {{ message.get_html() | safe}}
+                        {% endfor %}
+
+
+                        {% if group.messages|length < 1 %}
+                            <h3 class="center">There doesn't appear to me anything shared with this group yet</h3>
+                        {% endif %}
+                    </div>
                 </div>
 
-                <br>
-
-                <!--<button class="collapsible">Options</button>-->
-                <center>
-                    <button class="btn btn-primary btn-sm center" type="button" data-toggle="collapse" data-target="#options-card" aria-expanded="false" aria-controls="options-card">
-                        Options
-                    </button>
-                </center>
-
-                <div class="collapse" id="options-card">
-                      <div class="card card-body">
-                        Anim pariatur cliche reprehenderit, enim ei
-                      </div>
-                </div>
-
-                <div class="card options-card mb-3">
-                    <form method=post">
-                        <div class="form-check form-check-inline">
-                            {% if sending %}
-                                <input class="my-checkbox" type="checkbox" id="send-history" checked value="option1" >
-                            {% else %}
-                                <input class="my-checkbox" type="checkbox" id="send-history" value="option1">
-                            {% endif %}
-                            <label class="form-check-label" for="send-history">Send Browsing to this Group. <font color="grey">Note you can only send browsing data to one group.</font></label>
-                        </div>
-                    </form>
-                </div>
-
-                <div id="{{ group.name }}-links">
-                    {% for message_html in group.messages %}
-                        {{ message_html | safe}}
-                    {% endfor %}
-                </div>
             </div>
 
         </div>
-
     </div>
-
-
-
-
-<!--</div>-->
-<!--<iframe id="my-frame" allow-same-origin src="https://google.com"></iframe>-->
-
 {% endblock %}
