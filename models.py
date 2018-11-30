@@ -1,7 +1,11 @@
 from flask_login import UserMixin
 from . import utils
-from . import get_db
+from . import get_db, scraping
 from datetime import datetime, timedelta
+
+import json
+import sqlalchemy
+from sqlalchemy.types import TypeDecorator
 
 # Get an instance of the db from __init__
 db = get_db()
@@ -54,13 +58,17 @@ def relative_date(earlier_datetime):
 # End Time Utilities #
 
 
-def store_url_browse_event(url, user):
+def store_url_browse_event(url, user, scrape=True):
     """
     Create a message, commit it to the database and get it ready to send across the network.
     """
+    if scrape:
+        info = scraping.get_airbnb_info(url)
+    else:
+        info = None
 
     # Create the message and add it to the database
-    link = Link(url=url, originator=user, originator_id=user.id, posted_at=now_string())
+    link = Link(url=url, originator=user, originator_id=user.id, posted_at=now_string(), info=info)
 
     # Get the correct session for the object (hacky solution) #TODO fix base problem
     session = db.session.object_session(link)
@@ -123,6 +131,16 @@ def get_groups(user):
     return groups_user_member_of
 
 
+def get_active_group_list(groups, active_group):
+    active_group_list = []
+    for group in groups:
+        if group == active_group:
+            active_group_list.append('current_group')
+        else:
+            active_group_list.append('')
+    return active_group_list
+
+
 def set_send(user, group, send):
     """
     If send is True, set this group as the group the user is sharing data with.
@@ -171,12 +189,32 @@ members = db.Table('members',
 # )
 
 
+TEXT_DICT_SIZE = 1024
+
+
+class TextDict(TypeDecorator):
+
+    impl = sqlalchemy.Text(TEXT_DICT_SIZE)
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            value = json.dumps(value)
+
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            value = json.loads(value)
+        return value
+
+
 class Link(db.Model):
     __tablename__ = 'link'
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     url = db.Column(db.String(500), nullable=False)
     posted_at = db.Column(db.String(200), nullable=False)  # String representation of datetime
+    info = db.Column(TextDict(), nullable=True)
 
     originator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     originator = db.relationship("User", back_populates='history')
@@ -195,11 +233,13 @@ class Link(db.Model):
         url = utils.truncate(self.url)
         href = self.url
         time_posted = relative_date(string_to_datetime(self.posted_at))
+        print(self.info)
+        title = self.info['title'] if self.info.get('title') else ''
 
         if light:
             html = Link.history_template.format(url=url, href=href)
         else:
-            html = Link.message_template.format(user=user, url=url, href=href, date=time_posted)
+            html = Link.message_template.format(title=title, link=self, user=user, url=url, href=href, date=time_posted)
 
         return html
 

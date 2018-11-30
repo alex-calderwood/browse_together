@@ -1,25 +1,30 @@
 <html>
-        <div class="iframe-card card shadow bg-white rounded" style="height: 400px">
-                <div class="card-header">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col">
-                                Some Text or something
-                            </div>
-                            <div class="col text-center">
-                                <div class="text-center"><font color="grey">posted by </font>{user} <font color="grey">{date}</font></div>
-                            </div>
-                          </div>
-                        </div>
-                </div>
-            <a href="{href}">
-                <div class="card-body text-center">
-                    <p class="card-text center">{url}</p>
-                </div>
-            </a>
-
-            <iframe src="{href}" style="height: 100%"></iframe>
-
+     <div class="iframe-card card shadow mb-2 rounded" style="height: 400px">
+        <div class="card-header container">
+                <div class="row align-items-center">
+                    <div class="col-1">
+                        <span id="{link.id}-star" onClick="starClick(this)" class="fa fa-star"></span>
+                    </div>
+                    <div class="col-8 text-center">
+                        <div class="text-center adv-card-text"><h5><i>{title}</i></h5></div>
+                    </div>
+                    <div class="col text-center">
+                        <div class="text-center"><font class="adv-card-light">posted by </font> <font class="adv-card-text">{user}</font><font class="adv-card-light"> {date}</font></div>
+                    </div>
+                  </div>
         </div>
+
+        <iframe src="{href}" style="height: 100%"></iframe>
+
+        <div class="card-body text-center">
+            <a href="{href}">
+                <p class="card-text center">{url}</p>
+            </a>
+            <div class="form-group">
+                <input id="comment" name="comment" type="text" class="form-control comment valid" placeholder="Leave a comment">
+            </div>
+        </div>
+    </div>
+
 <div style="line-height: 4px;"><br></div>
 </html>

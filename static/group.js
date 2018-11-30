@@ -3,7 +3,7 @@ $(document).ready(function() {
     socket.on('connect', function(){
         console.log("User has connected")
 
-    })
+    });
 
     //  Receive a message
     socket.on('message', function(msg){
@@ -13,9 +13,8 @@ $(document).ready(function() {
         var html = m[1]
 
         table_to_append = "#" + id_num + "-messages"
-        console.log('appending to', table_to_append)
         $(table_to_append).append(html)
-    })
+    });
 
     //  Send a message
     $("#sendButton").click(function(){
@@ -24,20 +23,30 @@ $(document).ready(function() {
 
         myMessage = myMessage + '~' + user
         socket.send(myMessage)
-        console.log('Sent message', myMessage)
-    })
+    });
 
+//        //  Send a message
+//    $("#my-star").click(function(){
+//        console.log('star')
+//    })
 
     // Collapse sidebar
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
         $(this).toggleClass('active');
-    })
+    });
+
+    // Toggle Options
+    $( "#myOptionsButton").click(function() {
+        if ( $('.options-card').css('visibility') == 'hidden' )
+            $('.options-card').css('visibility','visible');
+        else
+            $('.options-card').css('visibility','hidden');
+
+    });
 
     // Start sending history to a group
     $('#send-history').on('click', function() {
-
-        console.log('something')
 
         var checked = false
 
@@ -49,11 +58,8 @@ $(document).ready(function() {
         var group_url = window.location.pathname
         group_url = group_url.replace(/%20/g," ");
         var group = group_url.split('/')
-        console.log('group', group)
         group = group[2]
         url = '../toggle_send_browsing/' + group
-
-        console.log(url, checked)
 
         user = 'Alex'
 
@@ -74,3 +80,8 @@ $(document).ready(function() {
 //    console.log('alex', document.getElementById("my-frame").contentWindow.location.href)
 });
 
+// Toggle color of clicked star
+function starClick(link) {
+    var element = document.getElementById(link.id)
+    element.classList.toggle('checked')
+}

@@ -7,6 +7,7 @@ from flask_cors import CORS, cross_origin
 from flask import jsonify
 from urllib.parse import unquote
 from flask_sqlalchemy import SQLAlchemy
+from . import scraping
 
 
 # Initialize app and such
@@ -37,6 +38,7 @@ login = LoginManager(app)
 # Create an object to allow external queries
 cors = CORS(app, resources={r"/api/*": {"origins": "chrome-extension"}})
 
+stoplist = ['/']
 
 @login.user_loader
 def load_user(id):
@@ -55,10 +57,7 @@ def handle_send_message(message):
     # Construct a cleaned URL
     message = utils.clean(message)
 
-    print('message', message)
-
     if message is None:
-        print('hey')
         flash('Not a valid URL. Message not sent.')
 
     # Create a new link and store it in the databse
@@ -73,11 +72,14 @@ def index():
     if not current_user.is_authenticated:
         return render_template('not_signed_in.html')
 
-    return render_template('index.html', groups=get_groups(current_user))
+    groups = get_groups(current_user)
+    agl = models.get_active_group_list(groups, None)
+    return render_template('index.html', groups=groups, active_group_list=agl)
 
 
 @app.route('/new_group/', methods=['GET', 'POST'])
 def new_group():
+    print('new')
     if not current_user.is_authenticated:
         return redirect('register')
 
@@ -96,6 +98,10 @@ def new_group():
         groups = db.session.query(Group).filter_by(name=name).all()
         error = False
 
+        if not utils.validate_group_name(name, stoplist):
+            form.group_name.errors.append('Name cannot include the following characters ' + str(stoplist))
+            error = True
+
         if len(groups) >= 1:
             form.group_name.errors.append('A group with that name already exists.')
             error = True
@@ -105,27 +111,37 @@ def new_group():
             error = True
 
         if error:
-            return render_template('create_group.html', form=form, groups=get_groups(current_user))
+            groups = get_groups(current_user)
+            agl = models.get_active_group_list(groups, None)
+            return render_template('create_group.html', form=form, groups=groups, active_group_list=agl)
         else:
             # Create a new Group with the specified name and members
             members_to_add = [current_user.username, form.member1.data, form.member2.data, form.member3.data]
             create_group(name, members_to_add)
-            return redirect(url_for('group', group_name=name))
+            return redirect(url_for('group_page', group_name=name))
 
     else:  # method = GET so render the page
-        return render_template('create_group.html', form=form)
+
+        groups = get_groups(current_user)
+        agl = models.get_active_group_list(groups, None)
+        return render_template('create_group.html', form=form, groups=groups, active_group_list=agl)
 
 
 @app.route('/group/<group_name>')
-def group(group_name=None):
+def group_page(group_name=None):
 
+    print('group')
     group = models.get_group(group_name)
     if group is None:
         return redirect(url_for('index'))
 
     is_sending = models.user_is_sharing_with_group(current_user, group)
 
-    return render_template('group.html', group=group, groups=get_groups(current_user), sending=is_sending)
+    groups = get_groups(current_user)
+    agl = models.get_active_group_list(groups, group)
+
+    print('ag', agl)
+    return render_template('group.html', group=group, groups=groups, active_group_list=agl, sending=is_sending)
 
 
 @app.route('/toggle_send_browsing/<group_name>', methods=["POST"])
@@ -145,8 +161,10 @@ def toggle_send_browsing(group_name=None):
     # Determine if the user is sending their browsing data to this group (for rendering the checkbox)
     is_sending = models.user_is_sharing_with_group(current_user, group)
 
-    return render_template('group.html', group=group, groups=get_groups(current_user), sending=is_sending)
+    groups = get_groups(current_user)
+    agl = models.get_active_group_list(groups, group)
 
+    return render_template('group.html', group=group, groups=groups, active_group_list=agl, sending=is_sending)
 
 @app.route('/user/<username>')
 @login_required
@@ -155,7 +173,10 @@ def user(username=None):
     users = db.session.query(User).filter_by(username=username).all()
     if len(users) < 1:
         flash('Could not find user {}.'.format(username))
-        return render_template('index.html', title='Your Groups', groups=get_groups(current_user))
+
+        groups = get_groups(current_user)
+        agl = models.get_active_group_list(groups, None)
+        return render_template('index.html', title='Your Groups', groups=groups, active_group_list=agl)
 
     # Get the first user (we presume there is only 1 user allowed for each username)
     other_user = users[0]
@@ -166,14 +187,19 @@ def user(username=None):
                                from_messages=load_messages(sender=other_user, receiver=current_user),
                                to_messages=load_messages(sender=current_user, receiver=other_user))
     else:
-        return render_template('index.html', title='Your Groups', groups=get_groups(current_user))
+        groups = get_groups(current_user)
+        agl = models.get_active_group_list(groups, None)
+        return render_template('index.html', title='Your Groups', groups=groups, active_group_list=agl)
 
 
 @app.route('/history')
 @login_required
 def history():
     history_urls = load_history(current_user)
-    return render_template('history.html', history=history_urls, groups=get_groups(current_user))
+
+    groups = get_groups(current_user)
+    agl = models.get_active_group_list(groups, None)
+    return render_template('history.html', history=history_urls, groups=groups, active_group_list=agl)
 
 
 # noinspection PyArgumentList
@@ -191,7 +217,6 @@ def register():
         login_user(user)
         flash('Thanks for registering')
         return redirect(url_for('index', user=user))
-    print('did not register')
 
     return render_template('register.html', form=form)
 
@@ -205,10 +230,8 @@ def login():
             user = db.session.query(User).filter_by(username=form.username.data).all()[0]
             login_user(user)
             flash('Logged in successfully.')
-            print('Could not log in {}'.format(form.username.data))
             return redirect(url_for('index'))
         except Exception:
-            print('Could not log in {}'.format(form.username.data))
             flash('Could not log in {}'.format(form.username.data))
     return redirect('register')
 
@@ -241,7 +264,6 @@ def register_url_change():
     data = str(data.decode('utf8')).split('&')
     url_token = 'url='
     urls = [term for term in data if term.startswith(url_token)]
-    print('--------')
 
     if len(urls) == 1:  # A new URL was navigated to
         status = 'success'
@@ -266,7 +288,6 @@ def register_url_change():
     else:
         status = 'failure'
 
-    print('------')
     response = {'yo': status}
     return jsonify(response)
 

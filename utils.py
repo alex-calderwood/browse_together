@@ -1,6 +1,20 @@
 import requests
 from urllib.parse import urlparse, ParseResult
 
+BNB = 'bnb'
+PLUS = 'plus'
+PAGE_TYPES = (BNB, PLUS)
+
+def page_type(url):
+    parsed = urlparse(url)
+    path = parsed.path.split('/')
+    if 'www.airbnb.com' in parsed.netloc and 'rooms' in path:
+        if 'plus' in path:
+            return PLUS
+        else:
+            return BNB
+    else:
+        return None
 
 def url_in_stoplist(url):
     parsed = urlparse(url)
@@ -16,8 +30,8 @@ def validate_url(url):
     return response.status_code == 200
 
 
-def clean(url):
 
+def clean(url):
     try:
         validate_url(url)
         return url
@@ -41,6 +55,13 @@ def clean(url):
         #     return url
         # else:
         return None
+
+
+def validate_group_name(name, stoplist):
+    for s in stoplist:
+        if s in name:
+            return False
+    return True
 
 
 def truncate(url):

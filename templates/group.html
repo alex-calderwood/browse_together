@@ -9,40 +9,21 @@
 {% block bar %}
 {% endblock %}
 
+{% block button %}
+    <button type="button" id="sidebarCollapse" class="navbar-btn">
+        <!--<i class="fas fa-align-left"></i>-->
+        <!--Hamburger-->
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+{% endblock %}
+
 {% block content %}
 <!--Place for messages to go-->
 
-<!--<div class="wrapper">-->
-
-    <!--&lt;!&ndash; Sidebar &ndash;&gt;-->
-    <!--<nav id="sidebar">-->
-        <!--&lt;!&ndash;TODO make a nicer looking hamberger button https://bootstrapious.com/p/bootstrap-sidebar&ndash;&gt;-->
-        <!--<div class="sidebar-header">-->
-            <!--<h4>Browse Together</h4>-->
-        <!--</div>-->
-
-        <!--<ul class="list-unstyled components">-->
-            <!--{% for cur_group in groups %}-->
-            <!--<li>-->
-                <!--<a class="sidebar-a" href="{{ url_for('group', group_name=cur_group.name) }}"> {{cur_group.name}} </a>-->
-            <!--</li>-->
-            <!--{% endfor %}-->
-        <!--</ul>-->
-
-    <!--</nav>-->
-
     <!--Page Content-->
     <div id=content" class="center">
-
-
-
-        <button type="button" id="sidebarCollapse" class="navbar-btn">
-            <!--<i class="fas fa-align-left"></i>-->
-            <!--Hamburger-->
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
 
         <div class="container h-100" style="width: 1100px;">
 
@@ -58,28 +39,30 @@
 
                     <!--<button class="collapsible">Options</button>-->
                     <center>
-                        <button class="btn btn-primary btn-sm center" type="button" data-toggle="collapse" data-target="#options-card" aria-expanded="false" aria-controls="options-card">
+                        <button id="myOptionsButton" class="myOptionsButton btn btn-primary btn-sm center" type="button" aria-expanded="false">
                             Options
                         </button>
                     </center>
 
-                    <div class="collapse" id="options-card">
-                          <div class="card card-body">
-                            Anim pariatur cliche reprehenderit, enim ei
-                          </div>
-                    </div>
-
                     <div class="card options-card mb-3">
-                        <form method=post">
-                            <div class="form-check form-check-inline">
-                                {% if sending %}
-                                    <input class="my-checkbox" type="checkbox" id="send-history" checked value="option1" >
-                                {% else %}
-                                    <input class="my-checkbox" type="checkbox" id="send-history" value="option1">
-                                {% endif %}
-                                <label class="form-check-label" for="send-history">Send Browsing to this Group. <font color="grey">Note you can only send browsing data to one group.</font></label>
-                            </div>
-                        </form>
+                        <div class="form-check form-check-inline center">
+                            {% if sending %}
+                                <input class="my-checkbox" type="checkbox" id="send-history" checked value="option1" >
+                            {% else %}
+                                <input class="my-checkbox" type="checkbox" id="send-history" value="option1">
+                            {% endif %}
+                            <label class="form-check-label" for="send-history">Send Browsing to this Group. <font color="grey">Note you can only send browsing data to one group.</font></label>
+                        </div>
+
+
+                        <div class="form-check form-check-inline center">
+                            {% if starred %}
+                                <input class="my-checkbox" type="checkbox" id="starred" checked value="option1" >
+                            {% else %}
+                                <input class="my-checkbox" type="checkbox" id="starred" value="option1">
+                            {% endif %}
+                            <label class="form-check-label" for="starred">Show Starred</label>
+                        </div>
                     </div>
 
 
@@ -91,7 +74,8 @@
 
 
                         {% if group.messages|length < 1 %}
-                            <h3 class="center">There doesn't appear to me anything shared with this group yet</h3>
+                            <h3 class="my-center">There doesn't appear to me anything shared with this group yet.</h3>
+                            <div class="my-center">(Share your browsing history under Options -> Send Browsing to this Group)</div>
                         {% endif %}
                     </div>
                 </div>
