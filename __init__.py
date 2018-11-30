@@ -61,7 +61,7 @@ def handle_send_message(message):
         flash('Not a valid URL. Message not sent.')
 
     # Create a new link and store it in the databse
-    message = store_url_browse_event(message, current_user)
+    # message = store_url_browse_event(message, current_user)
 
     # Send the new message's html representation across the network
     send(message, broadcast=True)
@@ -79,7 +79,6 @@ def index():
 
 @app.route('/new_group/', methods=['GET', 'POST'])
 def new_group():
-    print('new')
     if not current_user.is_authenticated:
         return redirect('register')
 
@@ -130,7 +129,6 @@ def new_group():
 @app.route('/group/<group_name>')
 def group_page(group_name=None):
 
-    print('group')
     group = models.get_group(group_name)
     if group is None:
         return redirect(url_for('index'))
@@ -140,7 +138,6 @@ def group_page(group_name=None):
     groups = get_groups(current_user)
     agl = models.get_active_group_list(groups, group)
 
-    print('ag', agl)
     return render_template('group.html', group=group, groups=groups, active_group_list=agl, sending=is_sending)
 
 

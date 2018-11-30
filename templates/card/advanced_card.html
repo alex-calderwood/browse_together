@@ -6,7 +6,9 @@
                         <span id="{link.id}-star" onClick="starClick(this)" class="fa fa-star"></span>
                     </div>
                     <div class="col-8 text-center">
-                        <div class="text-center adv-card-text"><h5><i>{title}</i></h5></div>
+                        <a href="{href}">
+                            <div class="text-center adv-card-text"><h5>{title}</h5></div>
+                        </a>
                     </div>
                     <div class="col text-center">
                         <div class="text-center"><font class="adv-card-light">posted by </font> <font class="adv-card-text">{user}</font><font class="adv-card-light"> {date}</font></div>
@@ -16,10 +18,13 @@
 
         <iframe src="{href}" style="height: 100%"></iframe>
 
+         <div class="container">
+             <div class="row">
+                 {rooms_html}
+             </div>
+         </div>
+
         <div class="card-body text-center">
-            <a href="{href}">
-                <p class="card-text center">{url}</p>
-            </a>
             <div class="form-group">
                 <input id="comment" name="comment" type="text" class="form-control comment valid" placeholder="Leave a comment">
             </div>

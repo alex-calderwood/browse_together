@@ -15,7 +15,6 @@ def get_airbnb_info(url):
         info['title'] = soup.title.string
         return info
 
-
     # Get the property's Title
     title = soup.find('h1', {'class': '_fecoyn4'})
     info['title'] = title.text

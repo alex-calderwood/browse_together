@@ -76,6 +76,13 @@ h4 {
     text-align: center;
 }
 
+.card-info {
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    background-color: var(--main-color-dark);
+}
+
 .page-title {
     color: var(--main-color-dark);
     padding: 10px;

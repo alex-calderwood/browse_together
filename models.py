@@ -4,7 +4,6 @@ from . import get_db, scraping
 from datetime import datetime, timedelta
 
 import json
-import sqlalchemy
 from sqlalchemy.types import TypeDecorator
 
 # Get an instance of the db from __init__
@@ -65,8 +64,9 @@ def store_url_browse_event(url, user, scrape=True):
     if scrape:
         info = scraping.get_airbnb_info(url)
     else:
-        info = None
+        info = {}
 
+    print('create')
     # Create the message and add it to the database
     link = Link(url=url, originator=user, originator_id=user.id, posted_at=now_string(), info=info)
 
@@ -194,7 +194,7 @@ TEXT_DICT_SIZE = 1024
 
 class TextDict(TypeDecorator):
 
-    impl = sqlalchemy.Text(TEXT_DICT_SIZE)
+    impl = db.Text(TEXT_DICT_SIZE)
 
     def process_bind_param(self, value, dialect):
         if value is not None:
@@ -226,6 +226,18 @@ class Link(db.Model):
     def __repr__(self):
         return '{} {} {}'.format(self.id, self.url, self.originator)
 
+    @staticmethod
+    def rooms_html(info):
+        html = ''
+        rooms = info.get('rooms')
+        if rooms is None:
+            return ''
+
+        for item in rooms:
+            html += """<div class="col card-info">{}</div>""".format(item) + '\n'
+
+        return html
+
     def get_html(self, light=False):
         """Return the HTML representation of the message with  bootstrap formatting"""
 
@@ -233,13 +245,14 @@ class Link(db.Model):
         url = utils.truncate(self.url)
         href = self.url
         time_posted = relative_date(string_to_datetime(self.posted_at))
-        print(self.info)
         title = self.info['title'] if self.info.get('title') else ''
+        rooms_html = Link.rooms_html(self.info)
 
         if light:
             html = Link.history_template.format(url=url, href=href)
         else:
-            html = Link.message_template.format(title=title, link=self, user=user, url=url, href=href, date=time_posted)
+            html = Link.message_template.format(title=title, link=self, user=user, url=url, href=href, date=time_posted,
+                                                rooms_html=rooms_html)
 
         return html
 
