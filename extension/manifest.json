@@ -16,5 +16,16 @@
     "tabs"
   ],
 
+  "browser_action": {
+    "default_icon": {
+      "32": "images/bb3.png"
+    },
+
+    "default_title": "Browse Together",
+
+    "default_popup": "popup.html"
+
+  },
+
   "content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'"
 }

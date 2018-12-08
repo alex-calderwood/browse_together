@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>popup</title>
+
+</head>
+
+<style>
+
+:root {
+    --main-color: #9fccff;
+    --main-color-dark: #619fe6;
+    --secondary-color: #ffdc9f;
+    --tertiary-color: #ffac9f;
+}
+
+.star {
+    color: grey;
+    padding: .2em;
+}
+
+.star.checked {
+    color: var(--secondary-color);
+}
+
+.title {
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.popup-window {
+    height:65px;
+    width:150px;
+    padding-top: 10px;
+    background-color: var(--main-color);
+    text-align: center;
+    border-radius: 9px;
+}
+
+#message {
+    color: var(--main-color-dark);
+    font-size: 0.7em;
+    padding: 0em;
+}
+
+</style>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<body>
+
+<script src="jquery.js"></script>
+<script src="popup.js"></script>
+
+<div class="popup-window">
+
+    <div class="title"> Browse Together <div class="title">
+    <span class="fa fa-star star" id="star"></span>
+</div>
+
+<span id="message">
+</span>
+
+</body>
+</html>

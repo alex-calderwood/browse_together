@@ -7,10 +7,11 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 //      new_url: changeInfo.url
 //    }
 
+     //Uncomment this to track user's browsing history
     // Url to post browsing data to
-    const endpointUrl='http://localhost:5000/api/register_url_change/'
-
-    $.post(endpointUrl, changeInfo, function(data, status){
-      console.log(changeInfo.url + ' sent: ' + changeInfo)
-    });
+//    const endpointUrl='http://localhost:5000/api/register_url_change/'
+//
+//    $.post(endpointUrl, changeInfo, function(data, status){
+//      console.log(changeInfo.url + ' sent: ' + changeInfo)
+//    });
 });
