@@ -5,8 +5,6 @@
     --tertiary-color: #ffac9f;
 }
 
-
-
 test-thing {
     color: var(--main-color);
 }
@@ -26,7 +24,7 @@ test-thing {
 
 .fa-star {
     font-size: 10px;
-    color: #999;
+    color: #999;browsing
     padding: 10px;
 }
 
@@ -34,6 +32,13 @@ test-thing {
     font-size: 17px;
     color: var(--secondary-color);
     padding: 10px;
+}
+
+.img-resize {
+  max-width: 325px;
+  max-height: 325px;
+  border: 0;
+  padding: 0;
 }
 
 
@@ -108,8 +113,8 @@ h4 {
 }
 
 #sidebar {
-    min-width: 250px;
-    max-width: 250px;
+    min-width: 300px;
+    max-width: 300px;
     min-height: 100vh;
     background: var(--main-color);
     color: white;
@@ -118,7 +123,7 @@ h4 {
 }
 
 #sidebar.active {
-    margin-left: -250px;
+    margin-left: -300px;
 }
 
 #sidebar .sidebar-header {
@@ -161,7 +166,7 @@ h4 {
 
 @media (max-width: 768px) {
     #sidebar {
-        margin-left; -250px;
+        margin-left; -300px;
     }
 
     #sidebar.active {

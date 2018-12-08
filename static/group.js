@@ -76,7 +76,7 @@ $(document).ready(function() {
 
     });
 
-
+    $('.carousel').carousel()
 //    console.log('alex', document.getElementById("my-frame").contentWindow.location.href)
 });
 

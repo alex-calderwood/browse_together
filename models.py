@@ -9,6 +9,7 @@ from sqlalchemy.types import TypeDecorator
 # Get an instance of the db from __init__
 db = get_db()
 
+
 def get_group(group_name):
     groups = db.session.query(Group).filter_by(name=group_name).all()
     if len(groups) < 1:
@@ -32,24 +33,17 @@ def string_to_datetime(string):
 def relative_date(earlier_datetime):
     delta = datetime.now() - earlier_datetime
 
-    two_years = timedelta(days=365)
-    year = timedelta(days=365)
-    month = timedelta(weeks=4)
-    day = timedelta(days=1)
-    hour = timedelta(hours=1)
-    min = timedelta(minutes=1)
-
-    if delta < min:
+    if delta < timedelta(minutes=1):
         return 'just now'
-    elif delta < hour:
+    elif delta < timedelta(hours=1):
         return str(int(delta.seconds / 60)) + ' minutes ago'
-    elif delta < day:
+    elif delta < timedelta(days=1):
         return str(int(delta.seconds / (60 * 60))) + ' hours ago'
-    elif delta < month:
+    elif delta < timedelta(weeks=4):
         return str(delta.days) + ' days ago'
-    elif delta < year:
+    elif delta < timedelta(days=365):
         return str(int(delta.days / 30.44)) + ' months ago'
-    elif delta < two_years:
+    elif delta < timedelta(days=730):
         return '> 1 year ago'
     else:
         return '> 2 years ago'
@@ -61,6 +55,7 @@ def store_url_browse_event(url, user, scrape=True):
     """
     Create a message, commit it to the database and get it ready to send across the network.
     """
+
     if scrape:
         info = scraping.get_airbnb_info(url)
     else:
@@ -84,6 +79,7 @@ def store_url_browse_event(url, user, scrape=True):
         session.commit()
 
     # Return serialized message ready for Socket.io
+    print('Created', link)
     return link.serialize()
 
 
@@ -234,9 +230,41 @@ class Link(db.Model):
             return ''
 
         for item in rooms:
-            html += """<div class="col card-info">{}</div>""".format(item) + '\n'
+            html += """<div class="col card-info">{}</div>\n""".format(item)
 
         return html
+    #
+    # @staticmethod
+    # def image_html(info):
+    #     html = ''
+    #     images = info.get('images')
+    #     if images is None:
+    #         return []
+    #
+    #     for i, image_src in enumerate(images):
+    #         html += """
+    #           <div class="carousel-item {}">
+    #             <img class="d-block w-100" src="{}" alt="First slide">
+    #           </div>
+    #         """.format('active' if i == 0 else '', image_src)
+    #     return html
+
+
+    @staticmethod
+    def image_html(info):
+        html = ''
+        images = info.get('images')
+        if images is None:
+            return []
+
+        for i, image_src in enumerate(images[:3]):
+            html += """
+              <div class="col">
+                <img class="img-resize" src="{}" alt="First slide">
+              </div>
+            """.format(image_src)
+        return html
+
 
     def get_html(self, light=False):
         """Return the HTML representation of the message with  bootstrap formatting"""
@@ -247,12 +275,13 @@ class Link(db.Model):
         time_posted = relative_date(string_to_datetime(self.posted_at))
         title = self.info['title'] if self.info.get('title') else ''
         rooms_html = Link.rooms_html(self.info)
+        images_html = Link.image_html(self.info)
 
         if light:
             html = Link.history_template.format(url=url, href=href)
         else:
-            html = Link.message_template.format(title=title, link=self, user=user, url=url, href=href, date=time_posted,
-                                                rooms_html=rooms_html)
+            html = Link.message_template.format(id=self.id, title=title, link=self, user=user, url=url, href=href, date=time_posted,
+                                                rooms_html=rooms_html, images_html=images_html)
 
         return html
 

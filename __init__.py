@@ -7,8 +7,7 @@ from flask_cors import CORS, cross_origin
 from flask import jsonify
 from urllib.parse import unquote
 from flask_sqlalchemy import SQLAlchemy
-from . import scraping
-
+from multiprocessing import Process
 
 # Initialize app and such
 app = Flask(__name__)
@@ -240,6 +239,7 @@ def press_switch_login():
     else:
         return redirect(url_for('login'))
 
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -262,6 +262,8 @@ def register_url_change():
     url_token = 'url='
     urls = [term for term in data if term.startswith(url_token)]
 
+    print('api', urls)
+
     if len(urls) == 1:  # A new URL was navigated to
         status = 'success'
 
@@ -272,7 +274,11 @@ def register_url_change():
 
         if not utils.url_in_stoplist(url):
             # Create a message, persist it to the database
-            message = store_url_browse_event(url, me)
+
+            # Parallel call to the database
+            p = Process(target=store_url_browse_event, args=(url, me))
+            p.start()
+            # message = store_url_browse_event(url, me)
 
             # TODO : GET THIS WORKING (WITH emit)
             # Send the new message's html representation across the network
@@ -285,12 +291,10 @@ def register_url_change():
     else:
         status = 'failure'
 
-    response = {'yo': status}
+    response = {'status': status}
     return jsonify(response)
 
 # Define Forms (from WTForms) #
-
-
 class NewGroupForm(Form):
     group_name = StringField('Group Name', [validators.Length(min=3, max=50)])
     member1 = SelectField('Member 1')
