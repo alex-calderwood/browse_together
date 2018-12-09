@@ -17,20 +17,25 @@ test-thing {
     color: var(--main-color-dark);
 }
 
+.history-img {
+    max-height: 70px;
+    margin:auto;
+    display:block;
+}
 
 .adv-card-light {
     color: var(--main-color);
 }
 
-.fa-star {
+.vote-icon {
     font-size: 10px;
-    color: #999;browsing
+    color: #999;
     padding: 10px;
 }
 
-.fa-star.checked {
+.vote-icon.checked {
     font-size: 17px;
-    color: var(--secondary-color);
+    color: var(--tertiary-color);
     padding: 10px;
 }
 

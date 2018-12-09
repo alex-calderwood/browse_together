@@ -25,11 +25,6 @@ $(document).ready(function() {
         socket.send(myMessage)
     });
 
-//        //  Send a message
-//    $("#my-star").click(function(){
-//        console.log('star')
-//    })
-
     // Collapse sidebar
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
@@ -80,8 +75,8 @@ $(document).ready(function() {
 //    console.log('alex', document.getElementById("my-frame").contentWindow.location.href)
 });
 
-// Toggle color of clicked star
-function starClick(link) {
+// Toggle color of clicked checkbox
+function voteClick(link) {
     var element = document.getElementById(link.id)
     element.classList.toggle('checked')
 }

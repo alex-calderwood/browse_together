@@ -294,6 +294,11 @@ def register_url_change():
     response = {'status': status}
     return jsonify(response)
 
+@app.route('/register_vote')
+def register_vote():
+    pass
+
+
 # Define Forms (from WTForms) #
 class NewGroupForm(Form):
     group_name = StringField('Group Name', [validators.Length(min=3, max=50)])

@@ -170,11 +170,16 @@ group_links = db.Table('group_links',
     db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
     db.Column('link_id', db.Integer, db.ForeignKey('link.id'))
 )
-localhost:5000
+
 # Group <-> User table
 members = db.Table('members',
     db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+)
+
+votes = db.Table('votes',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('link_id', db.Integer, db.ForeignKey('link.id'))
 )
 
 # Not needed since this is a one to many not many to many
@@ -215,7 +220,9 @@ class Link(db.Model):
     originator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     originator = db.relationship("User", back_populates='history')
 
-    # Load card templates
+    voters = db.relationship("User", secondary=votes, back_populates="voted_for")
+
+    # Load card templates (Do this hear to make dev changes appear quicker)
     message_template = open('templates/card/advanced_card.html').read()
     history_template = open('templates/card/history_card.html').read()
 
@@ -233,21 +240,6 @@ class Link(db.Model):
             html += """<div class="col card-info">{}</div>\n""".format(item)
 
         return html
-    #
-    # @staticmethod
-    # def image_html(info):
-    #     html = ''
-    #     images = info.get('images')
-    #     if images is None:
-    #         return []
-    #
-    #     for i, image_src in enumerate(images):
-    #         html += """
-    #           <div class="carousel-item {}">
-    #             <img class="d-block w-100" src="{}" alt="First slide">
-    #           </div>
-    #         """.format('active' if i == 0 else '', image_src)
-    #     return html
 
 
     @staticmethod
@@ -274,14 +266,17 @@ class Link(db.Model):
         href = self.url
         time_posted = relative_date(string_to_datetime(self.posted_at))
         title = self.info['title'] if self.info.get('title') else ''
+        location = self.info.get('location') if self.info.get('location') else ''
+        main = self.info.get('main_image') if self.info.get('main_image') else ''
+        map = self.info.get('map') if self.info.get('map') else ''
         rooms_html = Link.rooms_html(self.info)
         images_html = Link.image_html(self.info)
 
         if light:
-            html = Link.history_template.format(url=url, href=href)
+            html = Link.history_template.format(url=url, title=title, main=main, href=href)
         else:
             html = Link.message_template.format(id=self.id, title=title, link=self, user=user, url=url, href=href, date=time_posted,
-                                                rooms_html=rooms_html, images_html=images_html)
+                                                rooms_html=rooms_html, images_html=images_html, map=map, location=location)
 
         return html
 
@@ -301,6 +296,9 @@ class User(db.Model, UserMixin):
 
     # The group the user is sending their browsing data to (or None)
     sharing_browsing_with = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=True)
+
+    # The links this user has voted for
+    voted_for = db.relationship("Link", secondary=votes, back_populates="voters")
 
 
 class Group(db.Model):
