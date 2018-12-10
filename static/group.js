@@ -55,11 +55,10 @@ $(document).ready(function() {
         var group = group_url.split('/')
         group = group[2]
         url = '../toggle_send_browsing/' + group
-
         user = 'Alex'
 
         const request_data = {
-          user: user, // Unused
+          user: user, // Unused for now
           group_name: group,
           should_send: checked
         }
@@ -71,12 +70,22 @@ $(document).ready(function() {
 
     });
 
-    $('.carousel').carousel()
-//    console.log('alex', document.getElementById("my-frame").contentWindow.location.href)
 });
 
 // Toggle color of clicked checkbox
 function voteClick(link) {
-    var element = document.getElementById(link.id)
+    const url = '/api/register_vote/'
+    const element = document.getElementById(link.id)
+
     element.classList.toggle('checked')
+    is_checked = element.classList.contains('checked')
+
+    user = $("#username").text()
+    const request_data = {"user": user, "link": link.id, 'vote_status': is_checked}
+
+    console.log('vote', request_data)
+
+    $.post(url, request_data, function(response_data) {
+        console.log('posted', request_data, response_data)
+    });
 }

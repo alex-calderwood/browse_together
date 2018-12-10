@@ -3,7 +3,8 @@
         <div class="card-header container">
                 <div class="row align-items-center">
                     <div class="col-1">
-                        <span id="star-{id}" onClick="voteClick(this)" class="fa vote-icon" data-toggle="tooltip" data-placement="bottom" title="Vote for this option.">&#xf087;</span>
+                        <span id="star-{id}" onClick="voteClick(this)" class="fa vote-icon {checked}" data-toggle="tooltip" data-placement="bottom" title="Vote for this option.">&#xf087;</span>
+                        <span class='vote-icon' id="num-votes-{id}">{num_votes}</span>
                     </div>
                     <div class="col-8 text-center">
                         <a href="{href}">
@@ -45,6 +46,8 @@
                  {rooms_html}
              </div>
          </div>
+
+         {delete}
 
         <div class="card-body text-center">
             <div class="form-group">

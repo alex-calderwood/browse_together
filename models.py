@@ -247,7 +247,11 @@ class Link(db.Model):
         html = ''
         images = info.get('images')
         if images is None:
-            return []
+            main = info.get('main_image')
+            if main is None:
+                return ''
+            else:
+                images = [main]
 
         for i, image_src in enumerate(images[:3]):
             html += """
@@ -257,9 +261,16 @@ class Link(db.Model):
             """.format(image_src)
         return html
 
+    def _delete_html(self):
 
-    def get_html(self, light=False):
-        """Return the HTML representation of the message with  bootstrap formatting"""
+        return """<button id=delete-{}></button>""".format(self.id)
+
+    def get_html(self, viewing_user=None, light=False):
+        """
+        Return the HTML representation of the message with  bootstrap formatting
+        :param viewing_user: the current user, if any
+        :param light: whether to render the lighter version of the card
+        """
 
         user = self.originator.username
         url = utils.truncate(self.url)
@@ -271,12 +282,18 @@ class Link(db.Model):
         map = self.info.get('map') if self.info.get('map') else ''
         rooms_html = Link.rooms_html(self.info)
         images_html = Link.image_html(self.info)
+        num_votes = len(self.voters)
+
+        # Determine if the user who is viewing the card voted for it
+        checked = 'checked' if (viewing_user and viewing_user in self.voters) else ''
+        delete = self._delete_html() if (viewing_user and self.originator == viewing_user) else ''
 
         if light:
             html = Link.history_template.format(url=url, title=title, main=main, href=href)
         else:
             html = Link.message_template.format(id=self.id, title=title, link=self, user=user, url=url, href=href, date=time_posted,
-                                                rooms_html=rooms_html, images_html=images_html, map=map, location=location)
+                                                rooms_html=rooms_html, images_html=images_html, checked=checked, map=map,
+                                                location=location, num_votes=num_votes, delete=delete)
 
         return html
 

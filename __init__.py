@@ -9,6 +9,7 @@ from urllib.parse import unquote
 from flask_sqlalchemy import SQLAlchemy
 from multiprocessing import Process
 
+
 # Initialize app and such
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///browse_together.db'
@@ -25,7 +26,7 @@ def get_db():
 
 # Now you can import models.py because it can use this database
 from . import utils, models
-from .models import User, Group, get_groups, create_group, \
+from .models import User, Group, Link, get_groups, create_group, \
     store_url_browse_event, load_history, load_messages
 
 
@@ -137,7 +138,7 @@ def group_page(group_name=None):
     groups = get_groups(current_user)
     agl = models.get_active_group_list(groups, group)
 
-    return render_template('group.html', group=group, groups=groups, active_group_list=agl, sending=is_sending)
+    return render_template('group.html', group=group, groups=groups, active_group_list=agl, sending=is_sending, user=current_user)
 
 
 @app.route('/toggle_send_browsing/<group_name>', methods=["POST"])
@@ -161,6 +162,7 @@ def toggle_send_browsing(group_name=None):
     agl = models.get_active_group_list(groups, group)
 
     return render_template('group.html', group=group, groups=groups, active_group_list=agl, sending=is_sending)
+
 
 @app.route('/user/<username>')
 @login_required
@@ -294,9 +296,31 @@ def register_url_change():
     response = {'status': status}
     return jsonify(response)
 
-@app.route('/register_vote')
+
+@app.route("/api/register_vote/", methods=['POST'])
 def register_vote():
-    pass
+
+    data = request.get_data(as_text=True)
+    args = dict([arg.split('=') for arg in data.split('&')])
+
+    # Process the URL query string args
+    user = db.session.query(User).filter_by(username=args['user']).first()
+    link = db.session.query(Link).filter_by(id=args['link'].split('-')[1]).first()
+    vote_status = args['vote_status'] == 'true'
+
+    if vote_status:
+        if user not in link.voters:
+            link.voters.append(user)
+            db.session.commit()
+    else:
+        try:
+            link.voters.remove(user)
+            db.session.commit()
+        except Exception:
+            print('Could not remove user', user, 'from vote for', link.info.get('title'))
+
+    response = {'status': 'success'}
+    return jsonify(response)
 
 
 # Define Forms (from WTForms) #
@@ -305,6 +329,7 @@ class NewGroupForm(Form):
     member1 = SelectField('Member 1')
     member2 = SelectField('Member 2 (optional)', [validators.optional()])
     member3 = SelectField('Member 3 (optional)', [validators.optional()])
+
 
 class RegistrationForm(Form):
     username = StringField('Username', [validators.Length(min=4, max=25)])
@@ -347,4 +372,3 @@ if not (me and them):
     db.session.add(them)
     db.session.add(me)
     db.session.commit()
-

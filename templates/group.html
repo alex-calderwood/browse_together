@@ -65,13 +65,11 @@
                         </div>
                     </div>
 
-
                     <div id="{{ group.name }}-links">
 
                         {% for message in group.messages %}
-                            {{ message.get_html() | safe}}
+                            {{ message.get_html(viewing_user=user) | safe}}
                         {% endfor %}
-
 
                         {% if group.messages|length < 1 %}
                             <h3 class="my-center">There doesn't appear to me anything shared with this group yet.</h3>
