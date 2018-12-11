@@ -3,10 +3,12 @@
     --main-color-dark: #619fe6;
     --secondary-color: #ffdc9f;
     --tertiary-color: #ffac9f;
+    --time-1: 0.375s;
+    --modal-background: rgba(0, 0, 0, 0.4);
 }
 
-test-thing {
-    color: var(--main-color);
+.login-container {
+    padding: 120px;
 }
 
 .card-text {
@@ -34,7 +36,6 @@ test-thing {
   padding: 0;
 }
 
-
 #padding {
     line-height: 44px;
 }
@@ -58,9 +59,12 @@ a.nav-link:hover {color:#F00F00; text-decoration:none;} !important
     background-color: var(--main-color);
 } !important
 
-#login-button-container {
-    position: relative;
-    bottom: 30px;
+.login-button-container {
+    position: fixed;
+    bottom: 0;
+    align-items: center;
+    display: flex;
+    padding: 20px;
 }
 
 .iframe-card {
@@ -92,12 +96,14 @@ h4 {
 
 .page-title {
     color: var(--main-color-dark);
-    padding: 10px;
+    padding-top: 100px;
+    padding-bottom: 12px;
     font-family: 'Open Sans', sans-serif;
-    font-size: 2em;
+    font-size: 2.5em;
     font-weight: 600;
     line-height: 1em;
 }
+
 
 .page-sub {
     color: grey;
@@ -122,6 +128,7 @@ h4 {
     color: white;
     font-family: 'Open Sans', sans-serif;
     transition: all 0.3s;
+    box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 #sidebar.active {
@@ -129,8 +136,12 @@ h4 {
 }
 
 #sidebar .sidebar-header {
-    padding: 20px;
-    background: var(--main-color-dark);
+    color: var(--main-color-dark);
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2em;
+    font-weight: 600;
+    line-height: 1em;
 }
 
 #sidebar ul.components {
@@ -305,8 +316,6 @@ ul ul a {
     margin: 10px 0;
 }
 
-
-
 .custom-card {
   width: 700px;
   height: 335px;
@@ -315,14 +324,13 @@ ul ul a {
   padding-right: 40px;
   border-radius: 30px;
   border-width: 2px;
-  left: 50px;
   position: relative;
+  margin: auto;
 }
 
 .custom-card:hover {
   background-color: var(--main-color);
   transition-duration: var(--time-1);
-  transform: scale(1.02);
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
@@ -335,6 +343,14 @@ ul ul a {
 
 .custom-card:hover .custom-card-link {
   color: white; !immportant
+}
+
+.receive-icon {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    left: -16px;
+    top: -16px;
 }
 
 .custom-card-link {
@@ -454,4 +470,42 @@ ul ul a {
   color: grey;
   text-align: center;
   padding: 10px;
+}
+
+
+.delete-modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: var(--modal-background); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.delete-modal-content {
+  background-color: white;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  width: 200px; /* Could be more or less, depending on screen size */
+  border-radius: 15px;
+}
+
+/* The Close Button */
+.delete-modal-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.delete-modal-close:hover,
+.delete-modal-close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }

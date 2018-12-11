@@ -18,10 +18,16 @@
 .star {
     color: grey;
     padding: .2em;
+    transition-duration: 0.375s;
 }
 
 .star.checked {
     color: var(--secondary-color);
+}
+
+.star:hover {
+    color: var(--main-color);
+    cursor: pointer;
 }
 
 .title {
@@ -43,6 +49,7 @@
     color: var(--main-color-dark);
     font-size: 0.7em;
     padding: 0em;
+    transition-delay: 1.0s;
 }
 
 </style>

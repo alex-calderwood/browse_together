@@ -36,38 +36,23 @@
 
                     <br>
 
-                    <!--<button class="collapsible">Options</button>-->
-                    <center>
-                        <button id="myOptionsButton" class="myOptionsButton btn btn-primary btn-sm center" type="button" aria-expanded="false">
-                            Options
-                        </button>
-                    </center>
-
-                    <div class="card options-card mb-3">
-                        <div class="form-check form-check-inline center">
-                            {% if sending %}
-                                <input class="my-checkbox" type="checkbox" id="send-history" checked value="option1" >
-                            {% else %}
-                                <input class="my-checkbox" type="checkbox" id="send-history" value="option1">
-                            {% endif %}
-                            <label class="form-check-label" for="send-history">Send Browsing to this Group. <font color="grey">Note you can only send browsing data to one group.</font></label>
-                        </div>
-
-
-                        <div class="form-check form-check-inline center">
-                            {% if starred %}
-                                <input class="my-checkbox" type="checkbox" id="starred" checked value="option1" >
-                            {% else %}
-                                <input class="my-checkbox" type="checkbox" id="starred" value="option1">
-                            {% endif %}
-                            <label class="form-check-label" for="starred">Show Starred</label>
-                        </div>
-                    </div>
+                    <!--<div class="form-check form-check-inline center">-->
+                        <!--{% if sending %}-->
+                            <!--<input class="my-checkbox" type="checkbox" id="send-history" checked value="option1" >-->
+                        <!--{% else %}-->
+                            <!--<input class="my-checkbox" type="checkbox" id="send-history" value="option1">-->
+                        <!--{% endif %}-->
+                        <!--<label class="form-check-label" for="send-history">Send Browsing to this Group. <font color="grey">Note you can only send browsing data to one group.</font></label>-->
+                    <!--</div>-->
 
                     <div id="{{ group.name }}-links">
 
-                        {% for message in group.messages %}
-                            {{ message.get_html(viewing_user=user) | safe}}
+                        {% for message in group.messages_by_vote_count() %}
+                            <div class="row">
+                                <div class="col align-self-center">
+                                {{ message.get_html(viewing_user=user) | safe}}
+                                </div>
+                            </div>
                         {% endfor %}
 
                         {% if group.messages|length < 1 %}
@@ -81,4 +66,13 @@
 
         </div>
     </div>
+
+<div id="delete-modal" class="delete-modal">
+  <!-- Modal content -->
+  <div class="delete-modal-content">
+    <span class="delete-modal-close">&times;</span>
+    <button type="button" class="btn btn-danger delete-button">Delete Link?</button>
+  </div>
+</div>
+
 {% endblock %}

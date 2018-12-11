@@ -116,7 +116,8 @@ def new_group():
         else:
             # Create a new Group with the specified name and members
             members_to_add = [current_user.username, form.member1.data, form.member2.data, form.member3.data]
-            create_group(name, members_to_add)
+            create_group(name, current_user, members_to_add)
+            flash('New group created.')
             return redirect(url_for('group_page', group_name=name))
 
     else:  # method = GET so render the page
@@ -212,8 +213,8 @@ def register():
         db.session.add(user)
         db.session.commit()
 
+        flash('Welcome to Together!')
         login_user(user)
-        flash('Thanks for registering')
         return redirect(url_for('index', user=user))
 
     return render_template('register.html', form=form)
@@ -348,7 +349,6 @@ class LoginForm(Form):
     ])
 
 # End WTForms #
-
 
 db.create_all()
 

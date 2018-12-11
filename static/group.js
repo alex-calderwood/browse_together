@@ -1,4 +1,32 @@
 $(document).ready(function() {
+
+    // Get the modal ready
+    var modal = document.getElementById('delete-modal');
+    var del_x = document.getElementsByClassName('card-delete')[0];
+    var modal_close = document.getElementsByClassName('delete-modal-close')[0];
+    var delete_button = document.getElementsByClassName('delete-button')[0];
+    var id = -1;
+
+    del_x.onclick = function() {
+        console.log('click')
+        modal.style.display = "block"
+    }
+
+    modal_close.onclick = function() {
+        modal.style.display = "none"
+        modal_content.style.display = "none"
+    }
+
+    delete_button.onclick = function() {
+        modal.style.display = "none"
+        modal_content.style.display = "none"
+    }
+
+
+
+    // End Modal stuff
+
+
     var socket = io.connect('http://localhost:5000/')
     socket.on('connect', function(){
         console.log("User has connected")

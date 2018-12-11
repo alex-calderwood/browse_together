@@ -27,23 +27,42 @@
         <nav id="sidebar">
             <!--https://bootstrapious.com/p/bootstrap-sidebar-->
             <div class="sidebar-header center">
-                <h4> <a class='navbar-link' href="{{url_for('index')}}">Together</a></h4>
+                <a class="sidebar-header" href="{{url_for('index')}}">Together</a>
             </div>
 
             <ul class="list-unstyled components">
                 {% for cur_group in groups %}
                 <li>
-                    <a class="{{active_group_list[loop.index0]}} sidebar-a" href="{{ url_for('group_page', group_name=cur_group.name) }}"> {{cur_group.name}}</a>
+                    <div class="row row align-items-center">
+                        <div class="col">
+                            <a class="{{active_group_list[loop.index0]}} sidebar-a" href="{{ url_for('group_page', group_name=cur_group.name) }}"> {{cur_group.name}}</a>
+                        </div>
+                        <div class="col-1">
+                            <img class="receive-icon" src="../static/images/arrow-left-c.png">
+                        </div>
+                    </div>
                 </li>
                 {% endfor %}
             </ul>
 
-            <div id="login-button-container">
+            <div class="row" style="position: absolute; padding: 32px; bottom: 40px;">
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <ul class=flashes>
+                    {% for message in messages %}
+                      <div class="center" style="padding-left: 12px; padding-right: 12px; border-radius: 13px; background-color: var(--main-color-dark); color: white;">{{ message }}</div>
+                    {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
+            </div>
+
+            <div class="login-button-container" style="position: absolute; padding: 32px; bottom: 10px;">
                 <span>
                 {% if current_user.is_authenticated %}
                     Signed in as: <span id="username">{{ current_user.username }}</span>
                 {% else %}
-                <!--Nothing -->
+                    Currently logged out
                 {% endif %}
                 </span>
                 <a class="btn active bg-light" href="{{url_for('press_switch_login')}}">
@@ -57,7 +76,6 @@
 
         </nav>
 
-
         <!--Content-->
 
         {% block button %} {% endblock %}
@@ -66,20 +84,7 @@
             <div class="row">
             {% block content %} {% endblock %}
             </div>
-            <div class="row">
-                {% with messages = get_flashed_messages() %}
-                  {% if messages %}
-                    <ul class=flashes>
-                    {% for message in messages %}
-                      <div class="center">{{ message }}</div>
-                    {% endfor %}
-                    </ul>
-                  {% endif %}
-                {% endwith %}
-            </div>
         </div>
-
-
 
     </div>
 

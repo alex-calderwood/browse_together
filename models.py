@@ -102,7 +102,7 @@ def load_history(user):
     return [message.get_html(light=True) for message in history]
 
 
-def create_group(name, member_names):
+def create_group(name, user, member_names):
     new_group = Group(name=name)
 
     for member_name in member_names:
@@ -110,8 +110,12 @@ def create_group(name, member_names):
             member = User.query.filter_by(username=member_name).first()
             new_group.members.append(member)
 
+    user.sharing_browsing_with = new_group.id
+
     db.session.add(new_group)
     db.session.commit()
+
+    return new_group
 
 
 def get_friends(user):
@@ -349,3 +353,6 @@ class Group(db.Model):
 
     messages = db.relationship('Link', secondary='group_links',
                             backref=db.backref('groups', lazy='dynamic'))
+
+    def messages_by_vote_count(self):
+        return sorted(self.messages, key=lambda message: len(message.voters), reverse=True)
