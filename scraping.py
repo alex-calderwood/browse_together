@@ -57,21 +57,9 @@ def get_airbnb_info(url):
         if is_info_item(info_item) and info_item not in info['rooms']:
             info['rooms'].append(info_item)
 
-    # possible_classes = ['_fgdupie', '_12i0h32r']
-    # guests = [get_by_class(c) for c in possible_classes]
-    # info['rooms'] = flatten(guests)
-
-    # info['rooms'] = []
-    # for guest_item in guests:
-    #     bullet = guest_item.find('span', {'class': '_12i0h32r'})
-    #     if bullet:
-    #         info['rooms'].append(str(bullet.text))
-    #
-    # if len(info['rooms']) < 4 or \
-    #         'guests' not in info['rooms'][0] or \
-    #         'bedroom' not in info['rooms'][1]:
-    #     print('failed', info)
-    #     return get_airbnb_info(url)
+    # Get price
+    price = soup.find('span', {'class': "_doc79r"})
+    info['price'] = price.text
 
     # Get images
     images = soup.findAll('img')
@@ -92,15 +80,14 @@ def get_airbnb_info(url):
 
 if __name__ == '__main__':
     url ='https://www.airbnb.com/rooms/2306865?'
-    # browser.get(url)
-    # html = browser.page_source
-    #
-    # html = browser.page_source
-    # soup = BeautifulSoup(html, 'html.parser')
-    #
-    # location = soup.find('div', {'class': "_ncwphzu"})
-    #
-    # print(location.text)
+    browser.get(url)
+    html = browser.page_source
+
+    html = browser.page_source
+    soup = BeautifulSoup(html, 'html.parser')
+
+    price = soup.find('span', {'class': "_doc79r"})
+    print(price.text)
 
     print('Initialized browser. Beginning scrape.')
     info = get_airbnb_info(url)

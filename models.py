@@ -299,6 +299,7 @@ class Link(db.Model):
         rooms_html = Link.rooms_html(self.info)
         images_html = Link.image_html(self.info)
         num_votes = len(self.voters)
+        price = self.info.get('price') if self.info.get('price') else ''
 
         # Determine if the user who is viewing the card voted for it
         checked = 'checked' if (viewing_user and viewing_user in self.voters) else ''
@@ -311,7 +312,7 @@ class Link(db.Model):
                 id=self.id, title=title, link=self, user=user, url=url, href=href,
                 date=time_posted, rooms_html=rooms_html, images_html=images_html,
                 checked=checked, map=map, location=location, num_votes=num_votes,
-                delete=delete
+                delete=delete, price=price
             )
 
         return html

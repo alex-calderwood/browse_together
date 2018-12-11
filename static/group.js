@@ -83,6 +83,16 @@ function voteClick(link) {
 
     console.log('vote', request_data)
 
+    // Increment or decrement the vote count number
+    id = link.id.substr(-1)
+    vote_count = $('#vote-count-' + id)
+    if (is_checked) {
+        new_count = parseInt(vote_count.text()) + 1
+    } else {
+        new_count = parseInt(vote_count.text()) - 1
+    }
+    vote_count.text(new_count) // set the new value
+
     $.post(url, request_data, function(response_data) {
         console.log('posted', request_data, response_data)
     });
