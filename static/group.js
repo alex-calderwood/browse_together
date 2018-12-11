@@ -67,9 +67,7 @@ $(document).ready(function() {
 //            console.log('posted', request_data)
 //c            console.log(data)
         });
-
     });
-
 });
 
 // Toggle color of clicked checkbox

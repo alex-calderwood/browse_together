@@ -223,7 +223,7 @@ class Link(db.Model):
     voters = db.relationship("User", secondary=votes, back_populates="voted_for")
 
     # Load card templates (Do this hear to make dev changes appear quicker)
-    message_template = open('templates/card/advanced_card.html').read()
+    message_template = open('templates/card/airbnb.html').read()
     history_template = open('templates/card/history_card.html').read()
 
     def __repr__(self):
@@ -231,34 +231,50 @@ class Link(db.Model):
 
     @staticmethod
     def rooms_html(info):
-        html = ''
+        html = """
+        <div class="custom-card-info">
+            <div class="row">
+              {}
+            </div>
+        </div>"""
+
         rooms = info.get('rooms')
         if rooms is None:
             return ''
 
+        items = ''
+
         for item in rooms:
-            html += """<div class="col card-info">{}</div>\n""".format(item)
+            items += """
+            <div class="col">
+                <div class="custom-card-info-item">{}</div>
+            </div>""".format(item)
 
+        html = html.format(items)
         return html
-
 
     @staticmethod
     def image_html(info):
-        html = ''
+
+        html = """<div class="col">
+            <img class="custom-card-img" src='{}'>
+          </div>
+          <div class="col">
+            <img class="custom-card-img" src='{}'>
+          </div>"""
+
         images = info.get('images')
         if images is None:
             main = info.get('main_image')
             if main is None:
                 return ''
             else:
-                images = [main]
+                images = [main, main]
+        elif len(images) < 2:
+            images = [images[0], images[0]]
 
-        for i, image_src in enumerate(images[:3]):
-            html += """
-              <div class="col">
-                <img class="img-resize" src="{}" alt="First slide">
-              </div>
-            """.format(image_src)
+        html = html.format(images[0], images[1])
+
         return html
 
     def _delete_html(self):
@@ -291,9 +307,12 @@ class Link(db.Model):
         if light:
             html = Link.history_template.format(url=url, title=title, main=main, href=href)
         else:
-            html = Link.message_template.format(id=self.id, title=title, link=self, user=user, url=url, href=href, date=time_posted,
-                                                rooms_html=rooms_html, images_html=images_html, checked=checked, map=map,
-                                                location=location, num_votes=num_votes, delete=delete)
+            html = Link.message_template.format(
+                id=self.id, title=title, link=self, user=user, url=url, href=href,
+                date=time_posted, rooms_html=rooms_html, images_html=images_html,
+                checked=checked, map=map, location=location, num_votes=num_votes,
+                delete=delete
+            )
 
         return html
 

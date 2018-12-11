@@ -27,18 +27,6 @@ test-thing {
     color: var(--main-color);
 }
 
-.vote-icon {
-    font-size: 10px;
-    color: #999;
-    padding: 10px;
-}
-
-.vote-icon.checked {
-    font-size: 17px;
-    color: var(--tertiary-color);
-    padding: 10px;
-}
-
 .img-resize {
   max-width: 325px;
   max-height: 325px;
@@ -62,9 +50,18 @@ a.nav-link:hover {color:#F00F00; text-decoration:none;} !important
     color: white;
 }
 
+.navbar-link {
+    color:white;
+}
+
 .navbar-default {
     background-color: var(--main-color);
 } !important
+
+#login-button-container {
+    position: relative;
+    bottom: 30px;
+}
 
 .iframe-card {
     height: 400px;
@@ -306,4 +303,155 @@ ul ul a {
 
 .big-br {
     margin: 10px 0;
+}
+
+
+
+.custom-card {
+  width: 700px;
+  height: 335px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding-left: 40px;
+  padding-right: 40px;
+  border-radius: 30px;
+  border-width: 2px;
+  left: 50px;
+  position: relative;
+}
+
+.custom-card:hover {
+  background-color: var(--main-color);
+  transition-duration: var(--time-1);
+  transform: scale(1.02);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.custom-card-title {
+  padding-top:20px;
+  top: 0px;
+  text-align: center;
+  font-size: 20px;
+}
+
+.custom-card:hover .custom-card-link {
+  color: white; !immportant
+}
+
+.custom-card-link {
+  color: var(--main-color-dark);
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.custom-card-img {
+  width: 100%;
+  max-width: 600px;
+  max-height: 120px;
+  transition: transform .5s;
+  position: relative;
+}
+
+.custom-card-location-wrap {
+  width: 100%;
+  background-color: var(--main-color);
+  transition: transform .5s;
+}
+
+.custom-card-location-wrap:hover {
+  z-index: -1;
+}
+
+.custom-card-location {
+  color: white;
+  text-align: center;
+}
+
+.custom-card-map {
+  height: 108px;
+  width: 100%;
+  padding: 5px;
+}
+
+.card-delete {
+  position: relative;
+  font-size: 22px;
+  padding: 20px;
+  left: 0px;
+  top: 0px;
+  float: right;
+  background-color: Transparent;
+  border: none;
+  color: white;
+}
+
+.card-delete:hover {
+  color: var(--tertiary-color);
+}
+
+.custom-card-info {
+  background-color: var(--main-color);
+  font-color: white;
+  border-radius: 10px;
+  top: 40px;
+  position: relative;
+  transition-duration: var(--time-1);
+}
+
+.custom-card:hover .custom-card-info {
+  background-color: var(--main-color-dark);
+}
+
+.custom-card-price {
+  position: relative;
+  top: 40px;
+  text-align: center;
+}
+
+.custom-card:hover .custom-card-price {
+  color: black;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.custom-card-info-item {
+  text-align: center;
+  color: white;
+}
+
+.vote-icon {
+  background-color: Transparent;
+  position: relative;
+  left: -5px;
+  top: 25px;
+  border: none;
+  color: var(--main-color-dark);
+  font-size: 1.1em;
+}
+
+.vote-icon.checked {
+    color: var(--tertiary-color);
+}
+
+.custom-card:hover .vote-icon {
+  color: white;
+}
+
+.custom-card:hover .vote-icon.checked {
+    color: var(--tertiary-color);
+}
+
+.custom-card:hover .vote-icon:hover {
+  color: var(--tertiary-color);
+}
+
+.custom-card-more-info {
+  position: relative;
+  top: 50px;
+  text-color: grey;
+}
+
+.custom-card-more-info-item {
+  color: grey;
+  text-align: center;
+  padding: 10px;
 }
