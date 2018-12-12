@@ -1,0 +1,10 @@
+log/*
+.idea/
+.ipynb_checkpoints/
+__pycache__/
+browse_together.db
+geckodriver.log
+node_modules/
+npm-debug.log
+package-lock.json
+venv/
