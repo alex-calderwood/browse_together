@@ -1,19 +1,19 @@
 from . import utils
 # import utils
 from bs4 import BeautifulSoup
-from selenium.webdriver.firefox.options import Options
+# from selenium.webdriver.firefox.options import Options
 import os
 from selenium import webdriver
+import sys
+from selenium.webdriver.chrome.options import Options
 
-# Init a Firefox driver (replace the next line to the path to your own user profile)
-firefox_user_path = "~/.mozilla/firefox/gu16idx8.default/"
-profile = webdriver.FirefoxProfile(os.path.expanduser(firefox_user_path))
 
-options = Options()
-options.set_headless(True)
-browser = webdriver.Firefox(profile, options=options)
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+browser = webdriver.Chrome('/usr/bin/chromedriver', chrome_options=chrome_options)
 
-def get_airbnb_info(url):
+
+def scrape_site_info(url):
     info = {}
 
     # Load the page
@@ -23,17 +23,81 @@ def get_airbnb_info(url):
     html = browser.page_source
     soup = BeautifulSoup(html, 'html.parser')
 
+    # Do some logging, just in case
+    f = open('./log/site.html', 'w')
+    f.write(soup.prettify())
+    f.close()
+
     # Get the main image for the page from the meta tag if it exists
     main_image = soup.find('meta', {'property': 'og:image'})
     if main_image:
         info['main_image'] = main_image['content']
 
     # Check that it is a type of page we parse
-    if utils.page_type(url) != utils.BNB:
+    if utils.page_type(url) == utils.BNB:
+        return scrape_airbnb(soup, info)
+    elif utils.page_type(url) == utils.HOSTEL:
+        print(url)
+        return scrape_hostel(soup, url, info)
+    else:
         info['title'] = soup.title.string
         print('did not parse', info)
         return info
 
+
+def scrape_hostel(soup, url, info):
+    info['title'] = soup.find('h1', {'class': 'main-title'}).text
+
+    # Get images
+    image_tags = soup.findAll('img', {'class': 'gallery-image'})
+    images = [image['src'] for image in image_tags if image.get('src')]
+    images = ['https:' + image for image in images if image.startswith('//')]
+    info['images'] = images
+
+    print('images', info['images'])
+
+    # Get price
+    listed_prices = soup.findAll('span', {'class': 'rate-type-price'})
+    print(listed_prices)
+    listed_prices = [int(float(price.text.split('$')[1])) for price in listed_prices]
+    print(listed_prices)
+    price_range = (min(listed_prices), max(listed_prices))
+    if price_range[0] == price_range[1]:
+        info['price'] = '$' + str(price_range[0])
+    else:
+        info['price'] = '${}-{}'.format(price_range[0], price_range[1])
+
+    # Get rooms
+    rooms = soup.findAll('span', {'class': 'room-title'})
+    room_types = []
+    for room in rooms:
+        room = room.text
+        room = room.replace('Private', '')
+        room = room.replace('Shared', '')
+        room = room.replace('Standard', '')
+        room = room.replace('Dorm', '')
+        room = room.replace('Mixed', '')
+        room = room.replace('Female', '')
+        room = room.replace('Male', '')
+        room = room.replace('Basic', '')
+        room = room.replace('\n', '')
+        room = room.strip()
+        if room not in room_types:
+            room_types.append(room)
+    info['rooms'] = room_types
+
+    # Get location text
+    # info['location'] = soup.find('a', {'class': 'map_link'}).text # A more precise address that doens't look good
+    info['location'] = url.split('/')[5]
+
+    # Get map image
+    # TODO
+
+    info['site'] = 'Hostelworld'
+    return info
+
+
+def scrape_airbnb(soup, info):
     # Get the property's Title
     title = soup.find('h1', {'class': '_fecoyn4'})
     info['title'] = title.text
@@ -41,10 +105,10 @@ def get_airbnb_info(url):
     # Define some helper functions
     get_by_class = lambda parent, c: [tag.text for tag in parent.findAll('span', {'class': c})]
     get_by_all_classes = lambda parent, classes: [get_by_class(parent, c) for c in classes]
-    flatten = lambda l : [item for sublist in l for item in sublist]
+    flatten = lambda l: [item for sublist in l for item in sublist]
 
     # Get information about the rooms and number of guests
-    pos_bold_text_classes = ['_12i0h32r', '_fgdupie']  # These seem to unpredictably alternate
+    pos_bold_text_classes = ['_12i0h32r', '_fgdupie', '_ncwphzu']  # These seem to unpredictably alternate
     one_up = '_1thk0tsb'
     parent_tags = soup.findAll('div', {'class': one_up})
     pos_room_info = []
@@ -59,7 +123,8 @@ def get_airbnb_info(url):
 
     # Get price
     price = soup.find('span', {'class': "_doc79r"})
-    info['price'] = price.text
+    if price:
+        info['price'] = price.text
 
     # Get images
     images = soup.findAll('img')
@@ -67,7 +132,7 @@ def get_airbnb_info(url):
     info['images'] = links
 
     # Get map image
-    map = soup.find('div', {'class': '_1fmyluo4'})
+    map = soup.find('div', {'class': '_59m2yxn'})
     map_image = map.find('img')
     info['map'] = map_image['src']
 
@@ -75,6 +140,7 @@ def get_airbnb_info(url):
     location = soup.find('div', {'class': "_ncwphzu"})
     info['location'] = location.text
 
+    info['site'] = 'AirBnB'
     return info
 
 
@@ -90,7 +156,7 @@ if __name__ == '__main__':
     print(price.text)
 
     print('Initialized browser. Beginning scrape.')
-    info = get_airbnb_info(url)
+    info = scrape_site_info(url)
     print(info)
 
 

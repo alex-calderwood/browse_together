@@ -57,7 +57,7 @@ def store_url_browse_event(url, user, scrape=True):
     """
 
     if scrape:
-        info = scraping.get_airbnb_info(url)
+        info = scraping.scrape_site_info(url)
     else:
         info = {}
 
@@ -145,7 +145,6 @@ def set_send(user, group, send):
     """
     If send is True, set this group as the group the user is sharing data with.
     If send is False and this is the group the user is currently sharing with, disable sending entirely.
-
     """
 
     print(user, group, send)
@@ -185,13 +184,6 @@ votes = db.Table('votes',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('link_id', db.Integer, db.ForeignKey('link.id'))
 )
-
-# Not needed since this is a one to many not many to many
-# # User <-> Link table
-# history = db.Table('history',
-#     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-#     db.Column('link_id', db.Integer, db.ForeignKey('link.id'))
-# )
 
 
 TEXT_DICT_SIZE = 1024
@@ -248,7 +240,7 @@ class Link(db.Model):
 
         items = ''
 
-        for item in rooms:
+        for item in rooms[:5]:
             items += """
             <div class="col">
                 <div class="custom-card-info-item">{}</div>
@@ -304,7 +296,7 @@ class Link(db.Model):
         images_html = Link.image_html(self.info)
         num_votes = len(self.voters)
         price = self.info.get('price') if self.info.get('price') else ''
-
+        site = self.info.get('site') if self.info.get('site') else ''
         # Determine if the user who is viewing the card voted for it
         checked = 'checked' if (viewing_user and viewing_user in self.voters) else ''
         delete = self._delete_html() if (viewing_user and self.originator == viewing_user) else ''
@@ -316,7 +308,7 @@ class Link(db.Model):
                 id=self.id, title=title, link=self, user=user, url=url, href=href,
                 date=time_posted, rooms_html=rooms_html, images_html=images_html,
                 checked=checked, map=map, location=location, num_votes=num_votes,
-                delete=delete, price=price
+                delete=delete, price=price, site=site
             )
 
         return html

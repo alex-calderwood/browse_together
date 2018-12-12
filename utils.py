@@ -1,9 +1,7 @@
 import requests
 from urllib.parse import urlparse, ParseResult
 
-BNB = 'bnb'
-PLUS = 'plus'
-PAGE_TYPES = (BNB, PLUS)
+PAGE_TYPES = (BNB, PLUS, HOSTEL) = ("bnb", "plus", "hostel")
 
 def page_type(url):
     parsed = urlparse(url)
@@ -13,6 +11,8 @@ def page_type(url):
             return PLUS
         else:
             return BNB
+    elif 'www.hostelworld.com' in parsed.netloc and 'hosteldetails.php' in path:
+        return HOSTEL
     else:
         return None
 

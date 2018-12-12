@@ -2,27 +2,41 @@ $(document).ready(function() {
 
     // Get the modal ready
     var modal = document.getElementById('delete-modal');
-    var del_x = document.getElementsByClassName('card-delete')[0];
+    var del_x = document.getElementsByClassName('card-delete');
     var modal_close = document.getElementsByClassName('delete-modal-close')[0];
     var delete_button = document.getElementsByClassName('delete-button')[0];
-    var id = -1;
-
-    del_x.onclick = function() {
-        console.log('click')
-        modal.style.display = "block"
-    }
+    var prev_clicked_delete_button = -1;
 
     modal_close.onclick = function() {
         modal.style.display = "none"
-        modal_content.style.display = "none"
-    }
+    };
 
     delete_button.onclick = function() {
         modal.style.display = "none"
-        modal_content.style.display = "none"
+        console.log(prev_clicked_delete_button)
+
+        // Delete the link whose 'x' was last pressed from the database
+        const delete_url = '../delete_link/'
+
+        $.post(delete_url, prev_clicked_delete_button, function( data ) {
+
+        });
+
+        // Delete the card html from the document
+        document.getElementById("custom-card-" + prev_clicked_delete_button).remove();
+
+    };
+
+    for (var i = 0; i < del_x.length; i++) {
+        del_x[i].onclick = function(event) {
+            modal.style.display = "block";
+            target = event.currentTarget;
+            id = target.id.split('-')[1];
+
+            // Keep track of the last 'x' that was pressed by the user
+            prev_clicked_delete_button = id;
+        }
     }
-
-
 
     // End Modal stuff
 
@@ -92,8 +106,7 @@ $(document).ready(function() {
         }
 
         $.post(url, request_data, function( data ) {
-//            console.log('posted', request_data)
-//c            console.log(data)
+
         });
     });
 });
@@ -112,7 +125,8 @@ function voteClick(link) {
     console.log('vote', request_data)
 
     // Increment or decrement the vote count number
-    id = link.id.substr(-1)
+    id = link.id.split('-')[1]
+
     vote_count = $('#vote-count-' + id)
     if (is_checked) {
         new_count = parseInt(vote_count.text()) + 1

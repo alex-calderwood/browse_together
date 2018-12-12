@@ -1,10 +1,14 @@
 :root {
     --main-color: #9fccff;
-    --main-color-dark: #619fe6;
-    --secondary-color: #ffdc9f;
+    --main-color-dark: #5092e2;
+    --secondary-color: #e6f1ff;
     --tertiary-color: #ffac9f;
     --time-1: 0.375s;
     --modal-background: rgba(0, 0, 0, 0.4);
+}
+
+body {
+    background-color: var(--secondary-color);
 }
 
 .login-container {
@@ -104,15 +108,13 @@ h4 {
     line-height: 1em;
 }
 
-
 .page-sub {
-    color: grey;
+    color: var(--main-color-dark);
     font-family: 'Open Sans', sans-serif;
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1em;
 }
-
 
 .wrapper {
     display: flex;
@@ -121,8 +123,8 @@ h4 {
 }
 
 #sidebar {
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 315px;
+    max-width: 315px;
     min-height: 100vh;
     background: var(--main-color);
     color: white;
@@ -132,7 +134,7 @@ h4 {
 }
 
 #sidebar.active {
-    margin-left: -300px;
+    margin-left: -315px;
 }
 
 #sidebar .sidebar-header {
@@ -152,7 +154,7 @@ h4 {
     color: #fff;
     padding: 10px;
     font-size: 1.1em;
-    font-weight: 300;
+    font-weight: 315;
     line-height: 1.7em;
     color: #999;
 }
@@ -179,7 +181,7 @@ h4 {
 
 @media (max-width: 768px) {
     #sidebar {
-        margin-left; -300px;
+        margin-left; -315px;
     }
 
     #sidebar.active {
@@ -221,7 +223,7 @@ ul ul a {
 #sidebarCollapse {
     width: 40px;
     height: 40px;
-    background: #fff;
+    background: transparent;
     border: none;
 }
 
@@ -326,6 +328,7 @@ ul ul a {
   border-width: 2px;
   position: relative;
   margin: auto;
+  background-color: white;
 }
 
 .custom-card:hover {
@@ -450,6 +453,7 @@ ul ul a {
 
 .custom-card:hover .vote-icon {
   color: white;
+  cursor: pointer;
 }
 
 .custom-card:hover .vote-icon.checked {

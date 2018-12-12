@@ -281,8 +281,8 @@ def register_url_change():
             # Parallel call to the database
             p = Process(target=store_url_browse_event, args=(url, me))
             p.start()
-            # message = store_url_browse_event(url, me)
 
+            # message = store_url_browse_event(url, me)
             # TODO : GET THIS WORKING (WITH emit)
             # Send the new message's html representation across the network
             # try:
@@ -319,6 +319,19 @@ def register_vote():
             db.session.commit()
         except Exception:
             print('Could not remove user', user, 'from vote for', link.info.get('title'))
+
+    response = {'status': 'success'}
+    return jsonify(response)
+
+
+@app.route('/delete_link/', methods=['POST'])
+def delete_link():
+    data = request.get_data(as_text=True)
+    link_id = int(data)
+
+    link = db.session.query(Link).filter_by(id=link_id).first()
+    db.session.delete(link)
+    db.session.commit()
 
     response = {'status': 'success'}
     return jsonify(response)

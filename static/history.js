@@ -13,8 +13,6 @@ $(document).ready(function() {
         var id_num = m[0] // don't use this right now, carry over from index.js
         var html = m[1]
 
-//        console.log(id_num, html)
-
         table_to_append = "history"
         console.log('appending to', table_to_append)
         $(table_to_append).append(html)
