@@ -4,6 +4,13 @@
 {% block head %}
 <script src="../static/group.js"></script>
 <script src="../static/finalized_group.js"></script>
+
+<style>
+.bg-color {
+    background-color: var(--gray);
+    opacity: 0.92;
+} !important
+</style>
 {% endblock %}
 
 
@@ -20,6 +27,15 @@
 {% endblock %}
 
 {% block content %}
+
+
+<style>
+.bg-color {
+    background-color: var(--gray;
+    opacity: 0.92;
+} !important
+</style>
+
     <!--Page Content-->
     <div id=content" class="center">
         <div class="container h-100" style="width: 1100px;">
@@ -51,6 +67,17 @@
         </div>
     </div>
 
+<div id="finalize-button" class="unwrap-prompt" data-toggle="tooltip" data-placement="left" title="Wrap it up">
+    <div class="row">
+        <div class="col">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <span class="wrap-up-arrow">&larr;</span>
+        </div>
+    </div>
+</div>
 
 <div id="delete-modal" class="delete-modal">
   <!-- Modal content -->
@@ -70,15 +97,14 @@
 {% endblock %}
 
 {% block footer %}
-<!--<div id="finalize-button" class="wrap-up-prompt" data-toggle="tooltip" data-placement="left" title="Wrap it up">-->
+<!--<div id="finalize-button" class="unwrap-prompt" data-toggle="tooltip" data-placement="left" title="Wrap it up">-->
     <!--<div class="row">-->
         <!--<div class="col">-->
-            <!--&lt;!&ndash;Wrap it up&ndash;&gt;-->
         <!--</div>-->
     <!--</div>-->
     <!--<div class="row">-->
         <!--<div class="col">-->
-            <!--<span class="wrap-up-arrow">&#x2192;</span>-->
+            <!--<span class="wrap-up-arrow">&larr;</span>-->
         <!--</div>-->
     <!--</div>-->
 <!--</div>-->

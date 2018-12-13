@@ -16,8 +16,8 @@ body {
     position: absolute;
     left: 0px;
     width: 100%;
-    height: 100%;
-    opacity: 0.7;
+    height: 1000vh;
+    opacity: 0.5;
     z-index: -1;
 }
 
@@ -150,11 +150,24 @@ h4 {
     font-size: 35px;
     text-align: center;
     color: white;
+    font-weight: 600;
     width: 900px;
     margin: 0 auto;
     padding-top: 30px;
-    bottom: 384px;
+    bottom: 375px;
     position: fixed;
+}
+
+.main-page-message2 {
+    font-size: 35px;
+    text-align: center;
+    color: white;
+    font-weight: 600;
+    width: 900px;
+    margin: 0 auto;
+    padding-top: 30px;
+    position: relative;
+    bottom: -400px;
 }
 
 .page-messsage-finalized {
@@ -200,6 +213,7 @@ h4 {
     min-width: 315px;
     max-width: 315px;
     min-height: 100vh;
+    height: 1000vh;
     background: var(--main-color);
     color: white;
     font-family: 'Open Sans', sans-serif;
@@ -396,8 +410,24 @@ ul ul a {
 }
 
 .index-button {
+    font-size: 20px;
+    font-weight: 250;
+    color: white;
     padding: 40px;
-    margin: 10px 0;
+    margin: 30px 0;
+    border-radius: 30px;
+    font-family: 'Open Sans', sans-serif;
+    color: var(--main-color-dark);
+}
+
+.index-buttons {
+    margin-top: 100px;
+}
+
+.index-button-left {
+    background-color: var(--main-color-dark);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    color: white;
 }
 
 .col-centered {
@@ -420,6 +450,7 @@ ul ul a {
   margin: auto;
   background-color: white;
   transition:height 1s ease-out;
+  margin-top: 15px;
 }
 
 .custom-card:hover {
@@ -710,3 +741,18 @@ input[type="checkbox"]:checked + .group-label:after {
     color: var(--main-color-dark);
 }
 
+.unwrap-prompt {
+    position: fixed;
+    bottom: 0;
+    left: 315px;
+    border-radius: 30px;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin: 20px;
+    cursor: pointer;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    color: #C1C1C1;
+    display: none;
+}

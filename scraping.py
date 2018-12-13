@@ -35,7 +35,6 @@ def scrape_site_info(url):
     if utils.page_type(url) == utils.BNB:
         return scrape_airbnb(soup, info)
     elif utils.page_type(url) == utils.HOSTEL:
-        print(url)
         return scrape_hostel(soup, url, info)
     else:
         info['title'] = soup.title.string
@@ -56,9 +55,7 @@ def scrape_hostel(soup, url, info):
 
     # Get price
     listed_prices = soup.findAll('span', {'class': 'rate-type-price'})
-    print(listed_prices)
     listed_prices = [int(float(price.text.split('$')[1])) for price in listed_prices]
-    print(listed_prices)
     price_range = (min(listed_prices), max(listed_prices))
     if price_range[0] == price_range[1]:
         info['price'] = '$' + str(price_range[0])
@@ -113,11 +110,15 @@ def scrape_airbnb(soup, info):
     for parent_tag in parent_tags:
         pos_room_info += flatten(get_by_all_classes(parent_tag, pos_bold_text_classes))
 
-    is_info_item = lambda text: text.endswith('guests') or text.endswith('bedroom') or text.endswith('beds') or text.endswith('bath')
+    is_info_item = lambda text: text.endswith('guest') or text.endswith('guests') or text.endswith('bedrooms') \
+                                or text.endswith('bedroom') or text.endswith('beds') or text.endswith('bed') or\
+                                text.endswith('bath') or text.endswith('baths')
     info['rooms'] = []
     for info_item in pos_room_info:
         if is_info_item(info_item) and info_item not in info['rooms']:
             info['rooms'].append(info_item)
+
+    print(info['rooms'])
 
     # Get price
     price = soup.find('span', {'class': "_doc79r"})

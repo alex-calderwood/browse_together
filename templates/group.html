@@ -3,6 +3,13 @@
 
 {% block head %}
 <script src="../static/group.js"></script>
+
+<style>
+.bg-color {
+    background-color: var(--secondary-color);
+    opacity: 0.92;
+}
+</style>
 {% endblock %}
 
 
@@ -36,7 +43,7 @@
                                 {% else %}
                                     <input class="my-checkbox" type="checkbox" id="send-history" value="option1">
                                 {% endif %}
-                                <label class="group-label form-check-label my-center" for="send-history" data-toggle="tooltip" data-placement="bottom" title="Your active group receives the links from the chrome extension.">Make this my active group.</label>
+                                <label class="group-label form-check-label my-center" for="send-history" data-toggle="tooltip" data-placement="bottom" title="Your active group receives links you star with the chrome extension.">Make this my active group.</label>
                             </div>
                         </div>
                     </div>

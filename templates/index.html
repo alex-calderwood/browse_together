@@ -10,25 +10,21 @@
 
 <div class="container index-content" style="width: 1100px;">
 
-    {% if groups.count() > 0 %}
 
     <br class="big-br">
 
     <h3 class="page-message" style="color: var(--main-color-dark)">You are now Together.</h3>
 
-    <div class="row">
+    <div class="row index-buttons">
         <div class="col-centered">
-            <a class="index-button btn btn-primary" href="{{ url_for('new_group') }}" role="button">Create a New Group</a>
-            <a class="index-button btn" href="{{ url_for('history') }}" role="button">View Your Browsing History</a>
+            <a class="index-button index-button-left" href="{{ url_for('new_group') }}" role="button">Create a New Group</a>
+            <a class="index-button" href="{{ url_for('history') }}" role="button">View Your Browsing History</a>
         </div>
     </div>
 
-    {%else %}
+    {% if groups.count() < 1 %}
 
-    <center>
-        <h3>Welcome to <i>Browse Together!</i> You don't appear to be in any groups. Why don't you create one?</h3>
-        <a class="btn btn-primary" href="{{ url_for('new_group') }}" role="button">Create a Group</a>
-    </center>
+    <h3 class="main-page-message2">Let's start.</h3>
 
     {% endif %}
 

@@ -176,7 +176,3 @@ function voteClick(link) {
         console.log('posted', request_data, response_data)
     });
 }
-
-function register() {
-    window.location.href = '/register/';
-}
