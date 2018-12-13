@@ -1,7 +1,8 @@
 import requests
 from urllib.parse import urlparse, ParseResult
 
-PAGE_TYPES = (BNB, PLUS, HOSTEL) = ("bnb", "plus", "hostel")
+PAGE_TYPES = (BNB, PLUS, HOSTEL) = ("AirBnB", "AirBnBplus", "Hostelworld")
+
 
 def page_type(url):
     parsed = urlparse(url)
@@ -16,6 +17,7 @@ def page_type(url):
     else:
         return None
 
+
 def url_in_stoplist(url):
     parsed = urlparse(url)
     print('url', parsed)
@@ -25,10 +27,10 @@ def url_in_stoplist(url):
         return True  # Probably some other Chrome Event like newtab
     return False
 
+
 def validate_url(url):
     response = requests.get(url)
     return response.status_code == 200
-
 
 
 def clean(url):

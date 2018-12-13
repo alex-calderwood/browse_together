@@ -99,6 +99,8 @@ $(document).ready(function() {
         url = '../toggle_send_browsing/' + group
         user = 'Alex'
 
+        console.log(group)
+
         const request_data = {
           user: user, // Unused for now
           group_name: group,
@@ -108,6 +110,8 @@ $(document).ready(function() {
         $.post(url, request_data, function( data ) {
 
         });
+
+        location.reload();
     });
 });
 

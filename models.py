@@ -99,7 +99,7 @@ def load_messages(sender=None, receiver=None):
 def load_history(user):
     """Load the browsing history for a given user"""
     history = db.session.query(Link).filter_by(originator_id=user.id)
-    return [message.get_html(light=True) for message in history]
+    return [message.get_html(lightweight=True) for message in history]
 
 
 def create_group(name, user, member_names):
@@ -131,13 +131,19 @@ def get_groups(user):
     return groups_user_member_of
 
 
-def get_active_group_list(groups, active_group):
+def get_group_list_styling(groups, current_group=None, user=None):
+    """
+    Return a list of strings that will be used a class labels for the groups on the navbar
+    """
     active_group_list = []
     for group in groups:
-        if group == active_group:
-            active_group_list.append('current_group')
-        else:
-            active_group_list.append('')
+        class_decorator = ''
+        if group == current_group:
+            class_decorator += 'current_group'
+        if user and user.is_authenticated and group.id == user.sharing_browsing_with:
+            class_decorator += ' active_group'
+        active_group_list.append(class_decorator)
+
     return active_group_list
 
 
@@ -218,9 +224,10 @@ class Link(db.Model):
 
     voters = db.relationship("User", secondary=votes, back_populates="voted_for")
 
-    # Load card templates (Do this hear to make dev changes appear quicker)
-    message_template = open('templates/card/airbnb.html').read()
-    history_template = open('templates/card/history_card.html').read()
+    # Load card templates (Do this here to make dev changes appear quicker)
+    room_template = open('templates/card/airbnb.html').read()
+    misc_template = open('templates/card/misc.html').read()
+    lightweight_template = open('templates/card/history_card.html').read()
 
     def __repr__(self):
         return '{} {} {}'.format(self.id, self.url, self.originator)
@@ -277,11 +284,11 @@ class Link(db.Model):
 
         return """<button id=delete-{}></button>""".format(self.id)
 
-    def get_html(self, viewing_user=None, light=False):
+    def get_html(self, viewing_user=None, lightweight=False):
         """
         Return the HTML representation of the message with  bootstrap formatting
         :param viewing_user: the current user, if any
-        :param light: whether to render the lighter version of the card
+        :param lightweight: whether to render the lighter version of the card
         """
 
         user = self.originator.username
@@ -289,9 +296,9 @@ class Link(db.Model):
         href = self.url
         time_posted = relative_date(string_to_datetime(self.posted_at))
         title = self.info['title'] if self.info.get('title') else ''
+        title = title[:109] + '...' if len(title) > 105 else title
         location = self.info.get('location') if self.info.get('location') else ''
-        main = self.info.get('main_image') if self.info.get('main_image') else ''
-        map = self.info.get('map') if self.info.get('map') else ''
+        main_image = self.info.get('main_image') if self.info.get('main_image') else ''
         rooms_html = Link.rooms_html(self.info)
         images_html = Link.image_html(self.info)
         num_votes = len(self.voters)
@@ -301,13 +308,29 @@ class Link(db.Model):
         checked = 'checked' if (viewing_user and viewing_user in self.voters) else ''
         delete = self._delete_html() if (viewing_user and self.originator == viewing_user) else ''
 
-        if light:
-            html = Link.history_template.format(url=url, title=title, main=main, href=href)
+
+
+        if site == utils.BNB:
+            map = self.info.get('map') if self.info.get('map') else ''
+        elif site == utils.HOSTEL:
+            map = self.info['images'][2]
         else:
-            html = Link.message_template.format(
+            map = ''
+
+        if lightweight: # Render the simpler version of the card
+            html = Link.lightweight_template.format(url=url, title=title, main=main_image, href=href)
+        elif site == utils.BNB or site == utils.HOSTEL:
+            html = Link.room_template.format(
                 id=self.id, title=title, link=self, user=user, url=url, href=href,
                 date=time_posted, rooms_html=rooms_html, images_html=images_html,
                 checked=checked, map=map, location=location, num_votes=num_votes,
+                delete=delete, price=price, site=site
+                )
+        else:
+            html = Link.misc_template.format(
+                id=self.id, title=title, link=self, user=user, url=url, href=href,
+                date=time_posted, rooms_html=rooms_html, main=main_image,
+                checked=checked, map=map, num_votes=num_votes,
                 delete=delete, price=price, site=site
             )
 

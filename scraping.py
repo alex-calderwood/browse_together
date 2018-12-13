@@ -2,9 +2,7 @@ from . import utils
 # import utils
 from bs4 import BeautifulSoup
 # from selenium.webdriver.firefox.options import Options
-import os
 from selenium import webdriver
-import sys
 from selenium.webdriver.chrome.options import Options
 
 

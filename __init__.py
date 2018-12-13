@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_socketio import SocketIO, send
 from flask_login import LoginManager, login_user, \
     logout_user, current_user, login_required
-from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, validators
+from wtforms import Form, StringField, PasswordField, SelectField, validators
 from flask_cors import CORS, cross_origin
 from flask import jsonify
 from urllib.parse import unquote
@@ -28,7 +28,6 @@ def get_db():
 from . import utils, models
 from .models import User, Group, Link, get_groups, create_group, \
     store_url_browse_event, load_history, load_messages
-
 
 app.app_context().push()
 
@@ -73,7 +72,7 @@ def index():
         return render_template('not_signed_in.html')
 
     groups = get_groups(current_user)
-    agl = models.get_active_group_list(groups, None)
+    agl = models.get_group_list_styling(groups, None, current_user)
     return render_template('index.html', groups=groups, active_group_list=agl)
 
 
@@ -111,7 +110,7 @@ def new_group():
 
         if error:
             groups = get_groups(current_user)
-            agl = models.get_active_group_list(groups, None)
+            agl = models.get_group_list_styling(groups, None, current_user)
             return render_template('create_group.html', form=form, groups=groups, active_group_list=agl)
         else:
             # Create a new Group with the specified name and members
@@ -123,7 +122,7 @@ def new_group():
     else:  # method = GET so render the page
 
         groups = get_groups(current_user)
-        agl = models.get_active_group_list(groups, None)
+        agl = models.get_group_list_styling(groups, None, current_user)
         return render_template('create_group.html', form=form, groups=groups, active_group_list=agl)
 
 
@@ -137,7 +136,7 @@ def group_page(group_name=None):
     is_sending = models.user_is_sharing_with_group(current_user, group)
 
     groups = get_groups(current_user)
-    agl = models.get_active_group_list(groups, group)
+    agl = models.get_group_list_styling(groups, group, current_user)
 
     return render_template('group.html', group=group, groups=groups, active_group_list=agl, sending=is_sending, user=current_user)
 
@@ -160,7 +159,7 @@ def toggle_send_browsing(group_name=None):
     is_sending = models.user_is_sharing_with_group(current_user, group)
 
     groups = get_groups(current_user)
-    agl = models.get_active_group_list(groups, group)
+    agl = models.get_group_list_styling(groups, group, current_user)
 
     return render_template('group.html', group=group, groups=groups, active_group_list=agl, sending=is_sending)
 
@@ -174,7 +173,7 @@ def user(username=None):
         flash('Could not find user {}.'.format(username))
 
         groups = get_groups(current_user)
-        agl = models.get_active_group_list(groups, None)
+        agl = models.get_group_list_styling(groups, None, current_user)
         return render_template('index.html', title='Your Groups', groups=groups, active_group_list=agl)
 
     # Get the first user (we presume there is only 1 user allowed for each username)
@@ -187,7 +186,7 @@ def user(username=None):
                                to_messages=load_messages(sender=current_user, receiver=other_user))
     else:
         groups = get_groups(current_user)
-        agl = models.get_active_group_list(groups, None)
+        agl = models.get_group_list_styling(groups, None, current_user)
         return render_template('index.html', title='Your Groups', groups=groups, active_group_list=agl)
 
 
@@ -197,7 +196,7 @@ def history():
     history_urls = load_history(current_user)
 
     groups = get_groups(current_user)
-    agl = models.get_active_group_list(groups, None)
+    agl = models.get_group_list_styling(groups, None, current_user)
     return render_template('history.html', history=history_urls, groups=groups, active_group_list=agl)
 
 
@@ -352,7 +351,6 @@ class RegistrationForm(Form):
         validators.equal_to('confirm', message='Passwords must match')
     ])
     confirm = PasswordField('Repeat Password')
-    accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
 
 
 class LoginForm(Form):

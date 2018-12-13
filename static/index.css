@@ -2,7 +2,7 @@
     --main-color: #9fccff;
     --main-color-dark: #5092e2;
     --secondary-color: #e6f1ff;
-    --tertiary-color: #ffac9f;
+    --tertiary-color: #ff7d66;
     --time-1: 0.375s;
     --modal-background: rgba(0, 0, 0, 0.4);
 }
@@ -68,7 +68,7 @@ a.nav-link:hover {color:#F00F00; text-decoration:none;} !important
     bottom: 0;
     align-items: center;
     display: flex;
-    padding: 20px;
+    padding: 25px;
 }
 
 .iframe-card {
@@ -77,10 +77,6 @@ a.nav-link:hover {color:#F00F00; text-decoration:none;} !important
 
 .history-card {
     height: 100px
-}
-
-.options-card {
-    visibility: hidden;
 }
 
 h4 {
@@ -100,20 +96,41 @@ h4 {
 
 .page-title {
     color: var(--main-color-dark);
-    padding-top: 100px;
-    padding-bottom: 12px;
     font-family: 'Open Sans', sans-serif;
-    font-size: 2.5em;
+    font-size: 3em;
+    text-align: center;
     font-weight: 600;
-    line-height: 1em;
+}
+
+.page-message {
+    font-size: 35px;
+    text-align: center;
+    color: grey;
+    width: 600px;
+    margin: 0 auto;
+    padding: 50px;
+    padding-top: 175px;
+}
+
+.page-title-group {
+    width: 500px;
+    margin: 0 auto;
+    border-radius: 1000px;
+    margin-top: 60px;
+    margin-bottom: 50px;
 }
 
 .page-sub {
+    float: none;
     color: var(--main-color-dark);
     font-family: 'Open Sans', sans-serif;
-    font-size: 1.1em;
-    font-weight: 300;
-    line-height: 1em;
+    font-size: 1.3em;
+    background-color: white;
+    border-radius: 100px;
+    margin: 0 auto;
+    text-align: center;
+    display: center-block;
+    padding: 10px;
 }
 
 .wrapper {
@@ -195,6 +212,27 @@ ul ul a {
     background: #6d7fcc;
 }
 
+.sidebar-active-marker {
+    font-style: italic;
+    color: var(--main-color-dark);
+    font-size: 0.9em;
+    padding-left: 5px;
+    padding-right: 6px;
+    badding-bottom: 3px;
+    position: absolute;
+    left: 15px;
+    z-index: 10;
+    top: 50%;
+    background-color: white;
+    border-radius: 10px;
+    transform: translateY(-50%);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    visibility: hidden;
+}
+
+.sidebar-active-marker.active_group {
+    visibility: visible;
+}
 
 .sidebar-a.current_group {
     color: inherit;
@@ -261,11 +299,6 @@ ul ul a {
     margin: 5px auto;
 }
 
-.my-checkbox {
-    width: 25px;
-    background-color: var(--main-color-dark);
-    position: relative;
-}
 
 /**
  * Display the tick inside the checkbox
@@ -362,10 +395,22 @@ ul ul a {
   border-radius: 10px;
 }
 
+.custom-card-content {
+    max-height: 130px;
+}
+
+.misc-card-content {
+    max-height: 115px;
+    overflow: hidden;
+}
+
+.form-check-label {
+    color: var(--main-color-dark);
+}
+
 .custom-card-img {
+  max-height: 100%;
   width: 100%;
-  max-width: 600px;
-  max-height: 120px;
   transition: transform .5s;
   position: relative;
 }
@@ -373,11 +418,11 @@ ul ul a {
 .custom-card-location-wrap {
   width: 100%;
   background-color: var(--main-color);
-  transition: transform .5s;
+  transition: 0.375s;
 }
 
-.custom-card-location-wrap:hover {
-  z-index: -1;
+.custom-card:hover .custom-card-location-wrap {
+  background-color: var(--main-color-dark);
 }
 
 .custom-card-location {
@@ -470,32 +515,42 @@ ul ul a {
   text-color: grey;
 }
 
+.misc-card-more-info {
+    position: relative;
+    bottom: 0px;
+    text-color: grey;
+}
+
 .custom-card-more-info-item {
   color: grey;
   text-align: center;
   padding: 10px;
 }
 
+.misc-card {
+    height: 235px;
+}
+
 
 .delete-modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  display: none;
+  position: fixed;
+  z-index: 1;
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
   background-color: var(--modal-background); /* Black w/ opacity */
 }
 
 /* Modal Content/Box */
 .delete-modal-content {
   background-color: white;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: 15% auto;
   padding: 20px;
-  width: 200px; /* Could be more or less, depending on screen size */
+  width: 200px;
   border-radius: 15px;
 }
 
@@ -512,4 +567,54 @@ ul ul a {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+
+/* checkbox stuff */
+input[type="checkbox"] {
+    display: none;
+}
+
+/* Checkbox Icons */
+.group-label {
+    position: relative;
+    padding-left: 80px;
+    font-size: 1em;
+    cursor: pointer;
+    color: var(--main-color-dark);
+    padding: 16px 28px 0 0;
+}
+
+.group-label:before, .group-label:after {
+    font-family: FontAwesome;
+    font-size: 2em;
+    /*absolutely positioned*/
+    position: absolute; top: 5px; left: -40px; right: 210px;
+}
+
+.group-label:before {
+    content: '\f096'; /*checkbox unchecked */
+}
+
+.group-label:after {
+    content: '\f00c'; /*checkbox checked*/
+    left: -32px;
+    right: 0px;
+    opacity: 0;
+    overflow: hidden
+    transition-duration: 0.4s;
+}
+
+input[type="checkbox"]:checked + .group-label:after {
+    max-width: 25px;
+    opacity: 1;
+}
+
+/* Wrap up stuff */
+.wrap-up-prompt {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background: grey;
+    font-size: 3em;
 }

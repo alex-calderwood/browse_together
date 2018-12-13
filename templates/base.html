@@ -11,6 +11,7 @@
     <!--<script src="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css"></script>-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
 
     {% block head %} {% endblock %}
 
@@ -36,10 +37,11 @@
                     <div class="row row align-items-center">
                         <div class="col">
                             <a class="{{active_group_list[loop.index0]}} sidebar-a" href="{{ url_for('group_page', group_name=cur_group.name) }}"> {{cur_group.name}}</a>
+                            <div id="active-marker-{{cur_group.id}}" class="sidebar-active-marker {{active_group_list[loop.index0]}}">
+                                active
+                            </div>
                         </div>
-                        <div class="col-1">
-                            <img class="receive-icon" src="../static/images/arrow-left-c.png">
-                        </div>
+                            <!--<img class="receive-icon" src="../static/images/arrow-left-c.png">-->
                     </div>
                 </li>
                 {% endfor %}
@@ -84,10 +86,9 @@
             <div class="row">
             {% block content %} {% endblock %}
             </div>
+            {% block footer %} {% endblock %}
         </div>
-
     </div>
-
 
 </body>
 </html>

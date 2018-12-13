@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
-<div class="custom-card" id="custom-card-{id}">
+<div class="custom-card misc-card" id="custom-card-{id}">
   <div class="row">
     <div class='col-1'>
       <span id="vote-{id}" onClick="voteClick(this)" class="fa vote-icon {checked}" data-toggle="tooltip" data-placement="bottom" title="Vote for this option.">&#xf087; <span id="vote-count-{id}">{num_votes}</span></span>
@@ -26,39 +26,25 @@
   </div>
 
   <div class="row custom-card-content">
-    <div class="row">
-        {images_html}
-
-      <div class="col">
-        <div class="custom-card-location-wrap">
-        <img class="custom-card-map" src="{map}">
-        <div class="custom-card-location">
-          {location}
+    <div class="row align-items-center">
+        <div class="col-4">
         </div>
-      </div>
-      </div>
+        <div class="col-4">
+          <img class="custom-card-img" src='{main}'>
+        </div>
+        <div class="col-4">
+        </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col custom-card-price">
-      <b>{price}</b>
-    </div>
-    <div class="col-10">
-      {rooms_html}
-    </div>
-  </div>
-
-  <div class="custom-card-more-info">
+  <div class="misc-card-more-info">
     <div class="row">
-      <div class="col custom-card-more-info-item">{site}</div>
       <div class="col custom-card-more-info-item">posted by {user} {date}</div>
     </div>
   </div>
+
 </div>
 
-
 <br>
-
 
 </html>
