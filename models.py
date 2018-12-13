@@ -296,7 +296,7 @@ class Link(db.Model):
         href = self.url
         time_posted = relative_date(string_to_datetime(self.posted_at))
         title = self.info['title'] if self.info.get('title') else ''
-        title = title[:109] + '...' if len(title) > 105 else title
+        title = title[:90] + '...' if len(title) > 90 else title
         location = self.info.get('location') if self.info.get('location') else ''
         main_image = self.info.get('main_image') if self.info.get('main_image') else ''
         rooms_html = Link.rooms_html(self.info)

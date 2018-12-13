@@ -18,7 +18,7 @@
 .star {
     color: grey;
     padding: .2em;
-    transition-duration: 0.375s;
+    transition-duration: 0.25s;
 }
 
 .star.checked {
@@ -30,15 +30,20 @@
     cursor: pointer;
 }
 
+.star.checked:hover {
+    color: var(--secondary-color);
+}
+
 .title {
     color: white;
     font-size: 2em;
-    font-weight: bold;
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .popup-window {
-    height:65px;
-    width:150px;
+    height: 35px;
+    width: 150px;
     padding-top: 10px;
     background-color: var(--main-color-dark);
     text-align: center;
@@ -64,7 +69,7 @@
 
 <div class="popup-window">
 
-    <div class="title"> Browse Together <div class="title">
+    <div class="title"> Together <div class="title">
     <span class="fa fa-star star" id="star"></span>
 </div>
 

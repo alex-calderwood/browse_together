@@ -1,11 +1,18 @@
 $(document).ready(function() {
 
-    // Get the modal ready
+
+    function sleep(delay) {
+        var start = new Date().getTime();
+        while (new Date().getTime() < start + delay);
+    }
+
+    // Get the delete card modal ready
     var modal = document.getElementById('delete-modal');
     var del_x = document.getElementsByClassName('card-delete');
     var modal_close = document.getElementsByClassName('delete-modal-close')[0];
     var delete_button = document.getElementsByClassName('delete-button')[0];
     var prev_clicked_delete_button = -1;
+
 
     modal_close.onclick = function() {
         modal.style.display = "none"
@@ -23,8 +30,8 @@ $(document).ready(function() {
         });
 
         // Delete the card html from the document
+//      document.getElementById("custom-card-" + prev_clicked_delete_button).style.height = "0px";
         document.getElementById("custom-card-" + prev_clicked_delete_button).remove();
-
     };
 
     for (var i = 0; i < del_x.length; i++) {
@@ -38,8 +45,34 @@ $(document).ready(function() {
         }
     }
 
-    // End Modal stuff
+    // End delete modal stuff
 
+    // Do the same for the finalize modal
+    var finalize_floating = document.getElementById('finalize-button');
+    var finalize_modal = document.getElementById('finalize-modal');
+    var finalize_modal_close = document.getElementById('finalize-modal-close');
+    var do_finalize_button = document.getElementById('do-finalize-button');
+    var top_card = document.getElementsByClassName('custom-card-title')[0];
+
+    finalize_modal_close.onclick = function() {
+        finalize_modal.style.display = "none"
+    };
+
+    do_finalize_button.onclick = function() {
+        finalize_modal.style.display = "none"
+    };
+
+    finalize_floating.onclick = function() {
+        finalize_modal.style.display = "block"
+        console.log(top_card)
+        top_card.style.zIndex = "3";
+    }
+
+    // End finalize modal stuff
+
+    if (del_x.length > 0) {
+        finalize_floating.style.display = "block";
+    }
 
     var socket = io.connect('http://localhost:5000/')
     socket.on('connect', function(){
@@ -142,4 +175,8 @@ function voteClick(link) {
     $.post(url, request_data, function(response_data) {
         console.log('posted', request_data, response_data)
     });
+}
+
+function register() {
+    window.location.href = '/register/';
 }

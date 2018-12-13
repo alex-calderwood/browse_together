@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<script src="../static/group.js"></script>
+<script src="../static/finalized_group.js"></script>
+{% endblock %}
+
+
+{% block bar %}
+{% endblock %}
+
+{% block button %}
+    <button type="button" id="sidebarCollapse" class="navbar-btn" data-toggle="tooltip" data-placement="bottom" title="Toggle Sidebar">
+        <!--Hamburger-->
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+{% endblock %}
+
+{% block content %}
+    <!--Page Content-->
+    <div id=content" class="center">
+        <div class="container h-100" style="width: 1100px;">
+            <div class="row">
+                <div class="col">
+                    <div class="page-title-group page-title-group-finalized">
+                        <div class="page-title" style="color: white"> {{group.name}} </div>
+                        <div class="page-sub">
+                            Members: {% for member in group.members %}{{member.username}}{% if not loop.last %},{% endif %} {% endfor %}
+                        </div>
+                    </div>
+
+                    <div id="{{ group.name }}-links">
+
+                        {% set message = group.messages_by_vote_count() | first   %}
+                            <div class="row">
+                                <div class="col align-self-center">
+                                {{ message.get_html(viewing_user=user) | safe}}
+                                </div>
+                            </div>
+
+                        {% if group.messages|length < 1 %}
+                            <h3 class="page-message">Go ahead and start sharing with the group!! <a href="">Get the chrome extension</a>  if you don't have it already.</h3>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <h3 class="page-message page-messsage-finalized" style="color: white">This trip was booked by Alex. Have a great time!</h3>
+        </div>
+    </div>
+
+
+<div id="delete-modal" class="delete-modal">
+  <!-- Modal content -->
+  <div class="delete-modal-content">
+    <span class="delete-modal-close">&times;</span>
+    <button type="button" class="btn btn-danger delete-button">Delete Link?</button>
+  </div>
+</div>
+
+<div id="finalize-modal" class="delete-modal finalize-modal">
+  <div class="delete-modal-content">
+    <span id="finalize-modal-close" class="delete-modal-close">&times;</span>
+    <button id="do-finalize-button" type="button" class="btn btn-secondary do-finalize-button">Finalize this trip?</button>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<!--<div id="finalize-button" class="wrap-up-prompt" data-toggle="tooltip" data-placement="left" title="Wrap it up">-->
+    <!--<div class="row">-->
+        <!--<div class="col">-->
+            <!--&lt;!&ndash;Wrap it up&ndash;&gt;-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+        <!--<div class="col">-->
+            <!--<span class="wrap-up-arrow">&#x2192;</span>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+{% endblock %}

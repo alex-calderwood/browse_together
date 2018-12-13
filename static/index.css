@@ -11,6 +11,16 @@ body {
     background-color: var(--secondary-color);
 }
 
+.bg-color {
+    background-color: var(--secondary-color);
+    position: absolute;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+    z-index: -1;
+}
+
 .login-container {
     padding: 120px;
 }
@@ -76,7 +86,10 @@ a.nav-link:hover {color:#F00F00; text-decoration:none;} !important
 }
 
 .history-card {
-    height: 100px
+    height: 100px;
+    width: 600px;
+    margin-left: 225px;
+    border-radius: 30px;
 }
 
 h4 {
@@ -100,16 +113,56 @@ h4 {
     font-size: 3em;
     text-align: center;
     font-weight: 600;
+    margin-bottom: 10px;
 }
 
 .page-message {
     font-size: 35px;
     text-align: center;
     color: grey;
-    width: 600px;
+    width: 900px;
     margin: 0 auto;
     padding: 50px;
     padding-top: 175px;
+}
+
+.main-page-title {
+    color: var(--main-color-dark);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 3.5em;
+    text-align: center;
+    font-weight: 600;
+    top: 250px;
+    position:fixed;
+    text-align: center;
+    width: 300px;
+    margin-left: 300px;
+    margin-right: 300px;
+    position: fixed;
+    border-radius: 45px;
+    background-color: white;
+    opacity: .75;
+    box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2);
+    cursor:pointer;
+}
+
+.main-page-message {
+    font-size: 35px;
+    text-align: center;
+    color: white;
+    width: 900px;
+    margin: 0 auto;
+    padding-top: 30px;
+    bottom: 384px;
+    position: fixed;
+}
+
+.page-messsage-finalized {
+    padding-top: 120px;
+}
+
+.create-group {
+    margin: 200px;
 }
 
 .page-title-group {
@@ -118,6 +171,10 @@ h4 {
     border-radius: 1000px;
     margin-top: 60px;
     margin-bottom: 50px;
+}
+
+.page-title-group-finalized {
+    margin-bottom: 120px;
 }
 
 .page-sub {
@@ -148,6 +205,7 @@ h4 {
     font-family: 'Open Sans', sans-serif;
     transition: all 0.3s;
     box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
 }
 
 #sidebar.active {
@@ -299,7 +357,6 @@ ul ul a {
     margin: 5px auto;
 }
 
-
 /**
  * Display the tick inside the checkbox
  */
@@ -362,6 +419,7 @@ ul ul a {
   position: relative;
   margin: auto;
   background-color: white;
+  transition:height 1s ease-out;
 }
 
 .custom-card:hover {
@@ -528,9 +586,8 @@ ul ul a {
 }
 
 .misc-card {
-    height: 235px;
+    height: 245px;
 }
-
 
 .delete-modal {
   display: none;
@@ -550,7 +607,7 @@ ul ul a {
   background-color: white;
   margin: 15% auto;
   padding: 20px;
-  width: 200px;
+  width: 280px;
   border-radius: 15px;
 }
 
@@ -567,6 +624,17 @@ ul ul a {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+.finalize-modal-content {
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    background-color: white;
+    padding: 20px;
+    margin: 20px;
+    width: 280px;
+    border-radius: 15px;
 }
 
 
@@ -615,6 +683,30 @@ input[type="checkbox"]:checked + .group-label:after {
     position: fixed;
     bottom: 0;
     right: 0;
-    background: grey;
-    font-size: 3em;
+    border-radius: 30px;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin: 20px;
+    cursor: pointer;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    color: #C1C1C1;
+    display: none;
 }
+
+.wrap-up-prompt:hover {
+    background-color: var(--main-color);
+}
+
+.wrap-up-prompt:hover .wrap-up-arrow{
+    color: white;
+}
+
+.wrap-up-arrow {
+    font-size: 3em;
+    font-weight: 1000;
+    line-height: 1em;
+    color: var(--main-color-dark);
+}
+

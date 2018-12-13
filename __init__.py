@@ -141,6 +141,20 @@ def group_page(group_name=None):
     return render_template('group.html', group=group, groups=groups, active_group_list=agl, sending=is_sending, user=current_user)
 
 
+@app.route('/finalized_group/<group_name>')
+def finalized_group_page(group_name=None):
+    group = models.get_group(group_name)
+    if group is None:
+        return redirect(url_for('index'))
+
+    is_sending = models.user_is_sharing_with_group(current_user, group)
+
+    groups = get_groups(current_user)
+    agl = models.get_group_list_styling(groups, group, current_user)
+
+    return render_template('finalized_group.html', group=group, groups=groups, active_group_list=agl, sending=is_sending, user=current_user)
+
+
 @app.route('/toggle_send_browsing/<group_name>', methods=["POST"])
 @login_required
 def toggle_send_browsing(group_name=None):
@@ -321,6 +335,7 @@ def register_vote():
 
     response = {'status': 'success'}
     return jsonify(response)
+
 
 
 @app.route('/delete_link/', methods=['POST'])

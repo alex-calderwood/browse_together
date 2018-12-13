@@ -20,7 +20,14 @@
 
 </head>
 
+
+{% from "_background.html" import background %}
+
+{{ background() }}
+
 <body>
+    <div class="bg-image"></div>
+
 
     <div class="wrapper">
 
@@ -82,7 +89,7 @@
 
         {% block button %} {% endblock %}
 
-        <div class="container">
+        <div class="container page-content">
             <div class="row">
             {% block content %} {% endblock %}
             </div>

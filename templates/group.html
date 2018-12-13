@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block button %}
-    <button type="button" id="sidebarCollapse" class="navbar-btn">
+    <button type="button" id="sidebarCollapse" class="navbar-btn" data-toggle="tooltip" data-placement="bottom" title="Toggle Sidebar">
         <!--Hamburger-->
         <span></span>
         <span></span>
@@ -52,7 +52,7 @@
                         {% endfor %}
 
                         {% if group.messages|length < 1 %}
-                            <h3 class="page-message">Go ahead and start sharing with the group!! <a href="">Get the chrome extension</a>  if you don't have it already.</h3>
+                            <h3 class="page-message">Go ahead and start sharing with the group!! <br><a href="" style="color: var(--main-color-dark)">Get the chrome extension</a>  if you don't have it already.</h3>
                         {% endif %}
                     </div>
                 </div>
@@ -69,10 +69,31 @@
   </div>
 </div>
 
+<div id="finalize-modal" class="delete-modal">
+  <div class="finalize-modal-content">
+    <span id="finalize-modal-close" class="delete-modal-close">&times;</span>
+    <a id="do-finalize-button" href="{{url_for('finalized_group_page', group_name=group.name)}}" class="btn btn-secondary do-finalize-button">Finalize this trip?</a>
+    <br>
+      <br>
+      <div style="text-align: center;">
+          Press this button to confirm you've booked the group's top pick.
+      </div>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block footer %}
-<div class="wrap-up-prompt">
-    Wrap it up &#x2192;
+<div id="finalize-button" class="wrap-up-prompt" data-toggle="tooltip" data-placement="left" title="Wrap it up">
+    <div class="row">
+        <div class="col">
+            <!--Wrap it up-->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <span class="wrap-up-arrow">&#x2192;</span>
+        </div>
+    </div>
 </div>
 {% endblock %}
