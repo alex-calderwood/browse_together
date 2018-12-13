@@ -55,26 +55,26 @@
                 {% endfor %}
             </ul>
 
-            <div class="row" style="position: absolute; padding: 32px; bottom: 40px;">
+            <div class="row" style="align-content: center; text-align: center; position: absolute; width: 315px; bottom: 120px;">
                 {% with messages = get_flashed_messages() %}
                   {% if messages %}
                     <ul class=flashes>
                     {% for message in messages %}
-                      <div class="center" style="padding-left: 12px; padding-right: 12px; border-radius: 13px; background-color: var(--main-color-dark); color: white;">{{ message }}</div>
+                      <div class="center" style="align-content: center; width: 270px; text-align: center; position: absolute; bottom: 20px; padding-left:50px; padding-right:50px; border-radius: 13px; background-color: var(--main-color-dark); color: white;">{{ message }}</div>
                     {% endfor %}
                     </ul>
                   {% endif %}
                 {% endwith %}
             </div>
 
-            <div class="login-button-container" style="position: absolute; padding: 32px; bottom: 10px;">
-                <span>
+            <div class="login-button-container" style="font-size: 20px; position: absolute; text-align: center; align-content: center; width: 315px; padding: 32px; bottom: 10px;">
+                <div>
                 {% if current_user.is_authenticated %}
                     Signed in as: <span id="username">{{ current_user.username }}</span>
                 {% else %}
                     Currently logged out
                 {% endif %}
-                </span>
+                </div>
                 <a class="btn active bg-light" href="{{url_for('press_switch_login')}}">
                     {% if current_user.is_authenticated %}
                     Log Out

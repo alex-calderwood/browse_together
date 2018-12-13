@@ -112,10 +112,10 @@ def scrape_airbnb(soup, info):
 
     is_info_item = lambda text: text.endswith('guest') or text.endswith('guests') or text.endswith('bedrooms') \
                                 or text.endswith('bedroom') or text.endswith('beds') or text.endswith('bed') or\
-                                text.endswith('bath') or text.endswith('baths')
+                                text.endswith('bath') or text.endswith('baths') or text.endswith('Studio')
     info['rooms'] = []
     for info_item in pos_room_info:
-        if is_info_item(info_item) and info_item not in info['rooms']:
+        if is_info_item(info_item) and info_item not in info.get('rooms'):
             info['rooms'].append(info_item)
 
     print(info['rooms'])
@@ -133,7 +133,14 @@ def scrape_airbnb(soup, info):
     # Get map image
     map = soup.find('div', {'class': '_59m2yxn'})
     map_image = map.find('img')
-    info['map'] = map_image['src']
+    print(map_image)
+    try:
+        map_image = map_image['src']
+    except Exception:
+        pass
+
+
+    info['map'] = map_image
 
     # Get location text
     location = soup.find('div', {'class': "_ncwphzu"})

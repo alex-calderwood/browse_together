@@ -74,11 +74,11 @@ a.nav-link:hover {color:#F00F00; text-decoration:none;} !important
 } !important
 
 .login-button-container {
-    position: fixed;
-    bottom: 0;
-    align-items: center;
     display: flex;
-    padding: 25px;
+    position: absolute;
+    width: 100%;
+    padding: 100px;
+    margin: 100px;
 }
 
 .iframe-card {
@@ -428,6 +428,17 @@ ul ul a {
     background-color: var(--main-color-dark);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     color: white;
+}
+
+.new-group-button: {
+    font-size: 20px;
+    font-weight: 250;
+    color: white;
+    padding: 40px;
+    margin: 30px 0;
+    border-radius: 30px;
+    font-family: 'Open Sans', sans-serif;
+    color: var(--main-color-dark);
 }
 
 .col-centered {

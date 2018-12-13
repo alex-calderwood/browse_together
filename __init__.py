@@ -259,7 +259,9 @@ def press_switch_login():
 @app.route("/logout")
 @login_required
 def logout():
+    user = current_user.username
     logout_user()
+    flash("Logged out", user)
     return redirect(url_for('index'))
 
 
@@ -381,8 +383,8 @@ db.create_all()
 me = None
 them = None
 
-me_name = 'Alex'
-them_name = 'Alice'
+me_name = 'Alice'
+them_name = 'George Siemens'
 
 try:
     me = db.session.query(User).filter_by(username=me_name).all()[0]
