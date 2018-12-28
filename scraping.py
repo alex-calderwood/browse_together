@@ -106,6 +106,7 @@ def scrape_airbnb(soup, info):
     pos_bold_text_classes = ['_12i0h32r', '_fgdupie', '_ncwphzu']  # These seem to unpredictably alternate
     one_up = '_1thk0tsb'
     parent_tags = soup.findAll('div', {'class': one_up})
+    print(parent_tags)
     pos_room_info = []
     for parent_tag in parent_tags:
         pos_room_info += flatten(get_by_all_classes(parent_tag, pos_bold_text_classes))
@@ -138,7 +139,6 @@ def scrape_airbnb(soup, info):
         map_image = map_image['src']
     except Exception:
         pass
-
 
     info['map'] = map_image
 

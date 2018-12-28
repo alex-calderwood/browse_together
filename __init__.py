@@ -383,7 +383,7 @@ db.create_all()
 me = None
 them = None
 
-me_name = 'Alice'
+me_name = 'Alex'
 them_name = 'George Siemens'
 
 try:

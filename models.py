@@ -313,7 +313,10 @@ class Link(db.Model):
         if site == utils.BNB:
             map = self.info.get('map') if self.info.get('map') else ''
         elif site == utils.HOSTEL:
-            map = self.info['images'][2]
+            if len(self.info['images']) > 1:
+                map = self.info['images'][2]
+            else:
+                map = ''
         else:
             map = ''
 

@@ -1,12 +1,16 @@
-# Browse Together (working title)
+# Together (working title)
+
+Send links to users in your group.
+
+Instructions: Add the `extension/` folder as a new Chrome extension. Then, run the app as a normal Flask app. 
 
 Project for Adv. Web Design Fall 2018
 
-My first project with:
+This is my first project with:
 
-Flask
-Bootrstrap
-Custom CSS
-JQuery
-Chrome Extension
+* Flask
+* Bootstrap
+* CSS
+* JQuery
+* Chrome Extension Dev
 
