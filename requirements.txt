@@ -3,6 +3,7 @@ Flask-SQLAlchemy
 WTForms
 flask-cors
 Flask-Login 
+flask-socketio
 selenium
 beautifulsoup4
-requests
+request
