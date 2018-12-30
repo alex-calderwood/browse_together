@@ -1,16 +1,12 @@
 # Together (working title)
 
-Send links to users in your group.
+A tool to send links to a group of users.
 
 Instructions: Add the `extension/` folder as a new Chrome extension. Then, run the app as a normal Flask app. 
 
-Project for Adv. Web Design Fall 2018
+Uses Python 3.5+ To install dependencies run:
 
-This is my first project with:
+    ./setup.sh
 
-* Flask
-* Bootstrap
-* CSS
-* JQuery
-* Chrome Extension Dev
+Originally my project for Adv. Web Design Fall 2018 with Prof. Lydia Chilton. 
 
